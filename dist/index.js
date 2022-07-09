@@ -30,7 +30,6 @@ Initial Artifact:
 💖 Heals 5 hp after every combat
 `));
 bot.launch();
-// Enable graceful telegraf stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 //# sourceMappingURL=index.js.map
