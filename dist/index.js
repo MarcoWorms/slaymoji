@@ -9,10 +9,6 @@ bot.start((ctx) => {
             "input_field_placeholder": "Pick a class!",
             "keyboard": [
                 [{ text: "🔴 Warrior" }],
-                [{ text: "🔒 Ranger" }],
-                [{ text: "🔒 Wizard" }],
-                [{ text: "🔒 Necromancer" }],
-                [{ text: "🔒 Priest" }],
             ]
         }
     });

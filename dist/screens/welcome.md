@@ -9,27 +9,14 @@ See you in the end of this dungeon 😉
 
 *Pick a class:*
 
-🔴 *Warrior*
-Health: ❤️ 50
+🔴 *Warrior* ❤️ 50
 Initial Deck: 👊👊✋✋💪
 Initial Artifact: 💖
 
-🔒 *Ranger*
-Health: 💚 35
-Initial Deck: 👊✋✋✋🧪
-Initial Artifact: ♻️
+🔒 *???????* 🔒
 
-🔒 *Wizard*
-Health: 💙 25
-Initial Deck: 👊👊✋✋🔥
-Initial Artifact: 🌙
+🔒 *???????* 🔒
 
-🔒 *Necromancer*
-Health: 💜 30
-Initial Deck: 👊✋✋💀💀
-Initial Artifact: ⚰️
+🔒 *???????* 🔒
 
-🔒 *Priest*
-Health: 💛 40
-Initial Deck: 👊👊✋✋🙏
-Initial Artifact: ✝️
+🔒 *???????* 🔒

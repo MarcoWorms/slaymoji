@@ -1,0 +1,4 @@
+{
+    "watch": ["src/screens"],
+    "ext": "md"
+  }
