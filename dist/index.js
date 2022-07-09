@@ -4,31 +4,67 @@ import screens from './screens/load.js';
 const bot = new Telegraf(process.env.BOT_TOKEN || '');
 bot.start((ctx) => {
     ctx.replyWithMarkdownV2(screens.welcome, {
+        "disable_web_page_preview": true,
         "reply_markup": {
             "one_time_keyboard": true,
-            "input_field_placeholder": "Pick a class!",
+            "input_field_placeholder": "Start a new game!",
             "keyboard": [
-                [{ text: "🔴 Warrior" }],
+                [{ text: "/pick_class" }],
             ]
         }
     });
 });
-bot.hears('🔴 Warrior', (ctx) => ctx.reply(`
-🔴 Warrior
+bot.hears('/pick_class', (ctx) => ctx.replyWithMarkdownV2(`
+*Pick a class:*
 
-Health: 
-❤️ 50 health points
+🔴 */Warrior*
 
-Initial Deck:
+⚫ ~*???????*~
+
+⚫ ~*???????*~
+
+⚫ ~*???????*~
+
+⚫ ~*???????*~
+`, {
+    "reply_markup": {
+        "one_time_keyboard": true,
+        "input_field_placeholder": "Pick a class!",
+        "keyboard": [
+            [{ text: "🔴 Warrior" }],
+        ]
+    }
+}));
+const warriorDescription = (ctx) => ctx.replyWithMarkdownV2(`
+🔴 *Warrior*
+
+❤️ *50* health points
+
+*Initial Deck:*
 👊 Deal 2 damage
 👊 Deal 2 damage
 👊 Deal 2 damage
 ✋ Block 6 damage
 💪 Other emojis have 2x power this turn
 
-Initial Artifact: 
+*Initial Artifact:*
 💖 Heals 5 hp after every combat
-`));
+
+*press /pick\\_warrior to start*
+
+or go back to /pick\\_class
+`, {
+    "reply_markup": {
+        "one_time_keyboard": true,
+        "input_field_placeholder": "Start with warrior!",
+        "keyboard": [
+            [{ text: "/pick_warrior" }],
+            [{ text: "/pick_class" }],
+        ]
+    }
+});
+bot.hears('🔴 Warrior', warriorDescription);
+bot.hears('/Warrior', warriorDescription);
 bot.launch();
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
