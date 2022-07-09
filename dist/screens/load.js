@@ -8,3 +8,4 @@ const { content: welcome } = parseMD(fs.readFileSync(path.join(__dirname, 'welco
 export default {
     welcome,
 };
+//# sourceMappingURL=load.js.map

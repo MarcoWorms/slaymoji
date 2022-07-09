@@ -6,9 +6,12 @@
   },
   "scripts": {
     "init": "tsc --init",
-    "start": "tsc-watch --onSuccess \"node ./src/index.js\"",
+    "clean-dist": "rimraf dist/",
+    "copy-screens-to-dist": "copyfiles -u 1 src/screens/*.md dist",
+    "prestart": "npm run clean-dist && npm run copy-screens-to-dist",
+    "start": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "build": "tsc"
-  },
+  },  
   "dependencies": {
     "dotenv": "16.0.1",
     "parse-md": "3.0.3",

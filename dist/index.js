@@ -37,3 +37,4 @@ bot.launch();
 // Enable graceful telegraf stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+//# sourceMappingURL=index.js.map
