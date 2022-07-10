@@ -53,9 +53,9 @@ const warriorDescription = (ctx: Context) => ctx.replyWithMarkdownV2(`
 *Initial Artifact:*
 💖 Heals 5 hp after every combat
 
-*press /pick\\_warrior to start*
+*press /pick\\_warrior to start the game!*
 
-or go back to /pick\\_class
+or go back to /pick\\_class to choose another one
 `, {
   "reply_markup": {
     "one_time_keyboard": true,
@@ -69,6 +69,12 @@ or go back to /pick\\_class
 
 bot.hears('🔴 Warrior', warriorDescription)
 bot.hears('/Warrior', warriorDescription)
+
+// bot.hears('/pick_warrior', (ctx: Context) => {
+//   ctx.replyWithMarkdownV2(`
+  
+//   `)
+// })
 
 bot.launch()
 // Enable graceful telegraf stop
