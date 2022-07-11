@@ -53,7 +53,7 @@ const warriorDescription = (ctx: Context) => ctx.replyWithMarkdownV2(`
 *Initial Artifact:*
 💖 Heals 5 hp after every combat
 
-*press /pick\\_warrior to start the game!*
+*press /pick\\_warrior to start the game\\!*
 
 or go back to /pick\\_class to choose another one
 `, {
