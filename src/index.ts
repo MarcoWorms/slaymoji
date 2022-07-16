@@ -72,7 +72,7 @@ bot.hears('/Warrior', warriorDescription)
 
 // bot.hears('/pick_warrior', (ctx: Context) => {
 //   ctx.replyWithMarkdownV2(`
-  
+//     Floor
 //   `)
 // })
 
