@@ -1,9 +1,10 @@
 import 'dotenv/config';
-import { Telegraf } from 'telegraf';
+import { Bot } from 'grammy';
 import screens from './screens/load.js';
-const bot = new Telegraf(process.env.BOT_TOKEN || '');
-bot.start((ctx) => {
-    ctx.replyWithMarkdownV2(screens.welcome, {
+const bot = new Bot(process.env.BOT_TOKEN || '');
+bot.command('start', (ctx) => {
+    ctx.reply(screens.welcome, {
+        "parse_mode": "MarkdownV2",
         "disable_web_page_preview": true,
         "reply_markup": {
             "one_time_keyboard": true,
@@ -14,7 +15,7 @@ bot.start((ctx) => {
         }
     });
 });
-bot.hears('/pick_class', (ctx) => ctx.replyWithMarkdownV2(`
+bot.hears('/pick_class', (ctx) => ctx.reply(`
 *Pick a class:*
 
 🔴 */Warrior*
@@ -27,6 +28,7 @@ bot.hears('/pick_class', (ctx) => ctx.replyWithMarkdownV2(`
 
 ⚫ ~*???????*~
 `, {
+    "parse_mode": "MarkdownV2",
     "reply_markup": {
         "one_time_keyboard": true,
         "input_field_placeholder": "Pick a class!",
@@ -35,7 +37,7 @@ bot.hears('/pick_class', (ctx) => ctx.replyWithMarkdownV2(`
         ]
     }
 }));
-const warriorDescription = (ctx) => ctx.replyWithMarkdownV2(`
+const warriorDescription = (ctx) => ctx.reply(`
 🔴 *Warrior*
 
 ❤️ *50* health points
@@ -54,6 +56,7 @@ const warriorDescription = (ctx) => ctx.replyWithMarkdownV2(`
 
 or go back to /pick\\_class to choose another one
 `, {
+    "parse_mode": "MarkdownV2",
     "reply_markup": {
         "one_time_keyboard": true,
         "input_field_placeholder": "Start with warrior!",
@@ -65,7 +68,7 @@ or go back to /pick\\_class to choose another one
 });
 bot.hears('🔴 Warrior', warriorDescription);
 bot.hears('/Warrior', warriorDescription);
-bot.launch();
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+bot.start();
+process.once('SIGINT', () => bot.stop());
+process.once('SIGTERM', () => bot.stop());
 //# sourceMappingURL=index.js.map

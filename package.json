@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "dotenv": "16.0.1",
-    "telegraf": "4.8.5"
+    "grammy": "1.9.1"
   },
   "type": "module"
 }
