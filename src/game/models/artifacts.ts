@@ -2,7 +2,7 @@ export default [
   {
     icon: '💖',
     description: 'Heals 5 hp after every combat',
-    effect: (combat, floor) => ({
+    effect: (_combat: any, _floor: any) => ({
       on: 'combat-won',
       self: {
         heal: 5,
@@ -12,7 +12,7 @@ export default [
   {
     icon: '🦾',
     description: 'Deal 1 damage to the enemy every turn',
-    effect: (combat, floor) => ({
+    effect: (combat: any, _floor: any) => ({
       on: 'turn',
       self: {
         attack: combat.self.attack + 1
