@@ -7,7 +7,7 @@
 👊 Deal 2 damage
 👊 Deal 2 damage
 ✋ Block 6 damage
-💪 Other emojis have 2x power this turn
+💪 Increase your attack power by 1 until the end of this floor
 
 *Initial Artifact:*
 💖 Heals 5 hp after every combat
