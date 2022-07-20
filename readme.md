@@ -1,7 +1,5 @@
 # ⚔️ Slaymoji
 
-> This game is still unreleased, read the [release schedule](#release-schedule) for information on release,
-
 Descend into increasingly hard procedural dungeons and build unique emojis decks!
 
 ## ❔ How to play
