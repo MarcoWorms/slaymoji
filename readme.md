@@ -80,3 +80,12 @@ The following telegram groups and bots are managed by @marcoworms, which also ha
 Any other group or bot is not maintained by us.
 
 Feel free to fork the code and redistribute it even if commercially, if you do it please let us know on the above channels! We'd like to support you and create channels for the communities to coexist.
+
+## 🔧 Develop
+
+Set up the telegram bot token by creating a `.env` file in the project root with `BOT_TOKEN = 'TELEGRAM_BOT_TOKEN_FROM_BOTFATHER'`. To make a new bot just talk to the BotFather: https://t.me/botfather
+
+* `npm i` install dependencies
+* `npm start` start development environment, updates automatically on saving file
+
+We still don't have vercel/gcp infrastructure for deployment, when this is done we will update this file with instructions on how to self host your version of this bot.
