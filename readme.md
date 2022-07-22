@@ -4,7 +4,7 @@ Descend into increasingly hard procedural dungeons and build unique emojis decks
 
 ## ❔ How to play
 
-1) Message [@slaymoji_bot](https://t.me/slaymoji_bot) on telegram to start
+1) Message [@slaymoji_bot](https://t.me/slaymoji_bot) on telegram to start **(not working yet, come back later!)**
 2) Pick one of the available classes to play with
 3) Descend into a 45 floors dungeon!
     - Each floor present you with simple micro choices that stack into complex macro strategy. Can you reach the end alive??
@@ -19,13 +19,15 @@ Every emoji deck starts with 5 emojis. When you face an enemies in combat the co
 
 ![](https://i.imgur.com/q5xrqfu.png)
 
-In each combat turn: 3 random emojis from your deck will be played, and each enemy will play 1 emoji. Emojis may deal or block damage, as well as inflict status changes like poison, stun, burn, and other common RPG tropes.
+- 👊 In each combat turn: 3 random emojis from your deck will be played, and each enemy will play 1 emoji.
 
-A Combat ends when either the player or all enemies reach Health 0. If the player wins he/she will go to the next floor with the same amount of current Health
+- 🖐️ Emojis may deal or block damage, as well as inflict status changes like poison, stun, burn, and other common RPG tropes.
 
-In the end of every combat: the player can choose 1 of 3 emojis shown to add to the deck, or there is an option to skip and maintain the deck unaltered.
+- ⚔️ A Combat ends when either the player or all enemies reach Health 0. If the player wins he/she will go to the next floor with the same amount of current Health
 
-Artifacts apply a constant effect throughout the entire gameplay. For example, the initial Warrior artifact heals the player for a fixed amount every time a combat is won.
+- 🎲 In the end of every combat: the player can choose 1 of 3 emojis shown to add to the deck, or there is an option to skip and maintain the deck unaltered.
+
+- 💖 Artifacts apply a constant effect throughout the entire gameplay. For example, the initial Warrior artifact heals the player for a fixed amount every time a combat is won.
 
 ## 🏛️ Floor Types
 
@@ -52,9 +54,10 @@ When the player beats floor 45, ascensions are unlocked. When replaying the game
 
 ## 🏗️ Release Schedule
 
-* Closed Beta: Admin invite-only period
-* Open Beta: Members open to inviting other members period
-* Full Release: Fully open to pay
+* 🧱 **Early Alpha**: Admin still creating code and testing rudimentary things
+* 🔒 **Closed Beta**: Admin invite-only period
+* 🔓 **Open Beta**: Members open to inviting other members period
+* 🌍 **Full Release**: Fully open to pay
 
 Stay in touch with our community and release dated by joining the groups below:
 - [Slaymoji Announcements](https://t.me/slaymoji)
