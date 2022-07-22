@@ -52,15 +52,15 @@ When the player moves to the next floor, sometimes more than one option emerges 
 ### 🎲 **Random Event**
 - Who knows what weird choices you'll have to take here?? Sometimes good, sometimes bad, sometimes neutral. 
 
-## 😈 Acsensions
+## 😈 Ascensions
 
 When the player beats floor 45, ascensions are unlocked. When replaying the game with the same class used before to win, the player can choose to up the difficulty notch by 1. Each time the player beats floor 45 in the current ascension, the next ascension difficulty is unlocked and every previous difficulty modifier stack:
 
-- **Acsension 1** 😈: Start dungeon with 50% health. Boss fights only heal up to 50% health.  
-- **Acsension 2** 😈😈: Boss fights no longer heal. (+ asc 1)  
-- **Acsension 3** 😈😈😈: Combat monsters have 50% more hp (+ asc 1, 2)  
-- **Acsension 4** 😈😈😈😈: Miniboss monsters have 50% more hp (+ asc 1, 2, 3)  
-- **Acsension 5** 😈😈😈😈😈: Boss monsters have 50% more hp (+ asc 1, 2, 3, 4)  
+- **Ascension 1** 😈: Start dungeon with 50% health. Boss fights only heal up to 50% health.  
+- **Ascension 2** 😈😈: Boss fights no longer heal. (+ asc 1)  
+- **Ascension 3** 😈😈😈: Combat monsters have 50% more hp (+ asc 1, 2)  
+- **Ascension 4** 😈😈😈😈: Miniboss monsters have 50% more hp (+ asc 1, 2, 3)  
+- **Ascension 5** 😈😈😈😈😈: Boss monsters have 50% more hp (+ asc 1, 2, 3, 4)  
 
 > The above are just examples and not the actual ascention modifiers. The number of total ascensions and their effects will depend on how the gameplay turn out, it's something that can't be predicted before the combat system is working and we play the game 
 
