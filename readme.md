@@ -7,7 +7,8 @@ Descend into increasingly hard procedural dungeons and build unique emojis decks
 1) Message [@slaymoji_bot](https://t.me/slaymoji_bot) on telegram to start **(not working yet, come back later!)**
 2) Pick one of the available classes to play with
 3) Descend into a 45 floors dungeon!
-    - Each floor present you with simple micro choices that stack into complex macro strategy. Can you reach the end alive??
+    - Each floor present you with simple micro choices that stack into complex macro strategy.
+    - Can you reach the end alive??
     - If you die go back to step 2 and try again with the same or another class!
     - If you win you will also go back to step 2, but things will get harder 😈
 
