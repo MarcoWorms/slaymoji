@@ -29,31 +29,49 @@ Every emoji deck starts with 5 emojis. When you face an enemies in combat the co
 
 When the player moves to the next floor, sometimes more than one option emerges for what should happen next: each option will correspond to one of the below floor types:
 
-⚔️ **Combat**: normal combat, enemies vary depending on the floor, the deeper into the dungeon the harder they get, always rewards with a "pick one out of 3 emojis or skip". Also rewards a bit of gold.  
-☠️ **Miniboss**: harder than usual combat, but rewards an random artifact (or skip) and the same rewards as a combat would.  
-💀 **Boss**: Every 15th floor is a boss, it's a harder than usual combat, but rewards an "pick one out of 3 artifacts or skip" and the same rewards as a Miniboss combat would (random artifact + pick emoji). Player is fully healed after winning.  
-💰 **Shop**: Trade gold for emojis and artifacts, or burn emojis from your deck.  
-🏕️ **Rest**: Heal 50% total health, "pick one out of 3 emojis or skip".  
-🎲 **Random Event**: Who knows what weird choices you'll have to take here?? Sometimes good, sometimes bad, sometimes neutral.  
+### ⚔️ **Combat**
+Normal combat, enemies vary depending on the floor, the deeper into the dungeon the harder they get, always rewards with a "pick one out of 3 emojis or skip". Also rewards a bit of gold.
+
+### ☠️ **Miniboss**
+Harder than usual combat, but rewards an random artifact (or skip) and the same rewards as a combat would.
+
+### 💀 **Boss**
+Every 15th floor is a boss, it's a harder than usual combat, but rewards an "pick one out of 3 artifacts or skip" and the same rewards as a Miniboss combat would (random artifact + pick emoji). Player is fully healed after winning.
+
+### 💰 **Shop**
+Trade gold for emojis and artifacts, or burn emojis from your deck.
+
+### 🏕️ **Rest**
+Heal 50% total health, "pick one out of 3 emojis or skip".
+
+### 🎲 **Random Event**
+Who knows what weird choices you'll have to take here?? Sometimes good, sometimes bad, sometimes neutral. 
 
 ## 😈 Acsensions
 
 When the player beats floor 45, ascensions are unlocked. When replaying the game with the same class used before to win, the player can choose to up the difficulty notch by 1. Each time the player beats floor 45 in the current ascension, the next ascension difficulty is unlocked and every previous difficulty modifier stack:
 
-**Acsension 1** 😈 Start dungeon with 50% health. Boss fights only heal up to 50% health.  
-**Acsension 2** 😈😈 Boss fights no longer heal. (+ asc 1)  
-**Acsension 3** 😈😈😈 Combat monsters have 50% more hp (+ asc 1, 2)  
-**Acsension 4** 😈😈😈😈 Miniboss monsters have 50% more hp (+ asc 1, 2, 3)  
-**Acsension 5** 😈😈😈😈😈 Boss monsters have 50% more hp (+ asc 1, 2, 3, 4)  
+**Acsension 1** 😈: Start dungeon with 50% health. Boss fights only heal up to 50% health.  
+**Acsension 2** 😈😈: Boss fights no longer heal. (+ asc 1)  
+**Acsension 3** 😈😈😈: Combat monsters have 50% more hp (+ asc 1, 2)  
+**Acsension 4** 😈😈😈😈: Miniboss monsters have 50% more hp (+ asc 1, 2, 3)  
+**Acsension 5** 😈😈😈😈😈: Boss monsters have 50% more hp (+ asc 1, 2, 3, 4)  
 
 > The above are just examples and not the actual ascention modifiers. The number of total ascensions and their effects will depend on how the gameplay turn out, it's something that can't be predicted before the combat system is working and we play the game 
 
 ## 🏗️ Release Schedule
 
-🧱 **Early Alpha**: Admin still creating code and testing rudimentary things  
-🔒 **Closed Beta**: Admin invite-only period  
-🔓 **Open Beta**: Members open to inviting other members period  
-🌍 **Full Release**: Fully open to pay  
+### 🧱 **Early Alpha**
+Admin still creating code and testing rudimentary things
+
+### 🔒 **Closed Beta**
+Admin invite-only period 
+
+### 🔓 **Open Beta**
+Members open to inviting other members period 
+
+### 🌍 **Full Release**
+Fully open to pay 
 
 Stay in touch with our community and release dated by joining the groups below:
 [🚨 Slaymoji Announcements](https://t.me/slaymoji)  
