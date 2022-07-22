@@ -61,6 +61,10 @@ When the player beats floor 45, ascensions are unlocked. When replaying the game
 
 ## 🏗️ Release Schedule
 
+Stay in touch with our community and release dated by joining the groups below:
+[🚨 Slaymoji Announcements](https://t.me/slaymoji)  
+[💬 Slaymoji Community Chat](https://t.me/slaymoji_chat)  
+
 ### 🧱 **Early Alpha**
 Admin still creating code and testing rudimentary things.
 
@@ -72,10 +76,6 @@ Members open to inviting other members period.
 
 ### 🌍 **Full Release**
 Fully open to play! 
-
-Stay in touch with our community and release dated by joining the groups below:
-[🚨 Slaymoji Announcements](https://t.me/slaymoji)  
-[💬 Slaymoji Community Chat](https://t.me/slaymoji_chat)  
 
 ## 🌟 Inspiration
 
@@ -90,9 +90,9 @@ Everything in this repository is licensed under [GPL-3](https://www.gnu.org/lice
 
 The following telegram groups and bots are managed by @marcoworms, which also happens to maintain the code for this repo along with @evaporei:
 
-⚔️ Slaymoji Game Bot: https://t.me/slaymoji_bot  
-🚨 Slaymoji Announcements Group: https://t.me/slaymoji  
-💬 Slaymoji Community Chat Group: https://t.me/slaymoji_chat  
+- Slaymoji Game Bot: https://t.me/slaymoji_bot  
+- Slaymoji Announcements Group: https://t.me/slaymoji  
+- Slaymoji Community Chat Group: https://t.me/slaymoji_chat  
 
 Any other group or bot is not maintained by us.
 
