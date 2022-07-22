@@ -62,16 +62,16 @@ When the player beats floor 45, ascensions are unlocked. When replaying the game
 ## 🏗️ Release Schedule
 
 ### 🧱 **Early Alpha**
-Admin still creating code and testing rudimentary things
+Admin still creating code and testing rudimentary things.
 
 ### 🔒 **Closed Beta**
-Admin invite-only period 
+Admin invite-only period.
 
 ### 🔓 **Open Beta**
-Members open to inviting other members period 
+Members open to inviting other members period.
 
 ### 🌍 **Full Release**
-Fully open to pay 
+Fully open to play! 
 
 Stay in touch with our community and release dated by joining the groups below:
 [🚨 Slaymoji Announcements](https://t.me/slaymoji)  
