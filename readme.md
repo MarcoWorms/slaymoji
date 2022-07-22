@@ -19,11 +19,11 @@ Every emoji deck starts with 5 emojis. When you face an enemies in combat the co
 
 ![](https://i.imgur.com/q5xrqfu.png)
 
-👊 In each combat turn: 3 random emojis from your deck will be played, and each enemy will play 1 emoji.  
-🖐️ Emojis may deal or block damage, as well as inflict status changes like poison, stun, burn, and other common RPG tropes.  
-⚔️ A Combat ends when either the player or all enemies reach Health 0. If the player wins he/she will go to the next floor with the same amount of current Health.  
-🎲 In the end of every combat: the player can choose 1 of 3 emojis shown to add to the deck, or there is an option to skip and maintain the deck unaltered.  
-💖 Artifacts apply a constant effect throughout the entire gameplay. For example, the initial Warrior artifact heals the player for a fixed amount every time a combat is won.  
+- 👊 In each combat turn: 3 random emojis from your deck will be played, and each enemy will play 1 emoji.  
+- 🖐️ Emojis may deal or block damage, as well as inflict status changes like poison, stun, burn, and other common RPG tropes.  
+- ⚔️ A Combat ends when either the player or all enemies reach Health 0. If the player wins he/she will go to the next floor with the same amount of current Health.  
+- 🎲 In the end of every combat: the player can choose 1 of 3 emojis shown to add to the deck, or there is an option to skip and maintain the deck unaltered.  
+- 💖 Artifacts apply a constant effect throughout the entire gameplay. For example, the initial Warrior artifact heals the player for a fixed amount every time a combat is won.  
 
 ## 🏛️ Floor Types
 
@@ -62,8 +62,8 @@ When the player beats floor 45, ascensions are unlocked. When replaying the game
 ## 🏗️ Release Schedule
 
 Stay in touch with our community and release dated by joining the groups below:  
-[🚨 Slaymoji Announcements](https://t.me/slaymoji)  
-[💬 Slaymoji Community Chat](https://t.me/slaymoji_chat)  
+- [Slaymoji Announcements](https://t.me/slaymoji)  
+- [Slaymoji Community Chat](https://t.me/slaymoji_chat)  
 
 ### 🧱 **Early Alpha**
 Admin still creating code and testing rudimentary things.
