@@ -61,7 +61,7 @@ When the player beats floor 45, ascensions are unlocked. When replaying the game
 
 ## 🏗️ Release Schedule
 
-Stay in touch with our community and release dated by joining the groups below:
+Stay in touch with our community and release dated by joining the groups below:  
 [🚨 Slaymoji Announcements](https://t.me/slaymoji)  
 [💬 Slaymoji Community Chat](https://t.me/slaymoji_chat)  
 
