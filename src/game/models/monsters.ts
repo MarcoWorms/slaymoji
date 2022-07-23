@@ -21,7 +21,7 @@ export const monsters = [
     artifacts: [''],
   },
   {
-    name: 'Snek',
+    name: 'Sneak',
     icon: '🐍',
     health: (floor:number) => 30 + floor,
     deck: ['👊','👊','✋','✋'],
