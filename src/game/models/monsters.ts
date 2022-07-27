@@ -9,22 +9,43 @@ export const floorMonsterPacks = [
       ['Snek', 'Snek'],
       ['Rat', 'Snek'],
     ]
-  }
+  },
+  {
+    floor: 2,
+    monstersPacks: [
+      ['Rat', 'Rat', 'Rat'],
+      ['Snek', 'Snek', 'Snek'],
+      ['Rat', 'Rat', 'Snek'],
+      ['Rat', 'Snek', 'Snek'],
+    ]
+  },
 ]
+
+export type monster = {
+  name: string,
+  icon: string,
+  maxHealth: (floor:number) => number,
+  health: number,
+  deck: string[],
+  emojisPerTurn: number,
+  artifacts: string[],
+}
 
 export const monsters = [
   {
     name: 'Rat',
     icon: '🐀',
-    health: (floor:number) => 10 + floor,
+    maxHealth: (floor:number) => 10 + floor,
     deck: ['👊','👊','👊','✋'],
+    emojisPerTurn: 1, // number of emojis that are casted by this monster each turn
     artifacts: [''],
   },
   {
     name: 'Snek',
     icon: '🐍',
-    health: (floor:number) => 30 + floor,
+    maxHealth: (floor:number) => 30 + floor,
     deck: ['👊','👊','✋','✋'],
+    emojisPerTurn: 1,
     artifacts: ['🦾'],
   },
 ]
