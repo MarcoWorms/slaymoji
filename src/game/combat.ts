@@ -1,6 +1,6 @@
 import {monsters, floorMonsterPacks, monster} from './models/monsters';
 import EMOJIS from './models/emojis'
-import ARTIFACTS from './models/artifacts'
+import ARTIFACTS, { artifactTriggers } from './models/artifacts'
 import CLASSES from './models/classes'
 
 // Randomize array in-place using Durstenfeld shuffle algorithm, an optimized version of Fisher-Yate
@@ -62,27 +62,50 @@ export const run = (player=mockPlayer, floor:number) => {
       })),
   }
 
+  // while no one has 0 health we will have another turn, eventually someone has to die (enforced by game-design)
   let turn = 0
   while (!winConditionMet(combatState)) {
     combatState = executeTurn(combatState, turn)
     turn += 1
   }
 
-  return {
-    player,
-    playerWon: player.health > 0,
-    log: `Enemies: ${
-      combatState.monsters.map(monster => monster.icon).join(' ')
-    }\n\n${
-      combatState.turns.join('\n\n')
-    }\n\n${
-      true ? 'You won!' : 'You lost!'
-    }`,
-  }
+  // cast player artifacts that has combatWon trigger type
+  player.health > 0
+    && player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, monsters))
 
+  const makeLog = combatState => `Enemies: ${
+    combatState.monsters.map(monster => monster.icon).join(' ')
+  }\n\n${
+    combatState.turns.join('\n\n')
+  }\n\n${
+    true ? 'You won!' : 'You lost!'
+  }`
+
+  return player.health > 0
+    ? {
+      player,
+      playerWon: true,
+      log: makeLog(combatState),
+      rewards: {
+        gold: 5 + floor,
+        pickOneEmoji: Array.from({ length: 3 }).map(() =>
+          CLASSES
+            .find(clas => clas.name === player.className)
+            [Math.floor(Math.random() * EMOJIS.length)]
+        ),
+      }
+    }
+    : {
+      player,
+      playerWon: false,
+      log: makeLog(combatState),
+    }
 }
 
 const castThisTurnEmojis = (caster, targets) => caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => emoji.cast(caster, targets))  
+const castThisTurnArtifacts = (caster, targets) => caster.artifacts.forEach(artifact => 
+  artifact.trigger === artifactTriggers.EVERY_TURN && artifact.cast(caster, targets)
+)
 
 function executeTurn (combatState, turn) {
 
@@ -93,10 +116,14 @@ function executeTurn (combatState, turn) {
   shuffleArray(player.deck)
   monsters.forEach(monster => shuffleArray(monster.deck))
 
-  // casts emojis for everyone this turn
+  // casts emojis and artiffact effects for everyone this turn
   castThisTurnEmojis(player, monsters)
+  castThisTurnArtifacts(player, monsters)
+  
+  
   monsters.forEach(monster => {
     castThisTurnEmojis(monster, [player])
+    castThisTurnArtifacts(monster, [player])
   })
 
   // TODO: make logs pretty using emojis descriptions
