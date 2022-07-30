@@ -1,22 +1,24 @@
-import { DeepReadonly } from 'ts-essentials'
-
 export type gameClass = {
   name: string,
   icon: string,
   healthIcon: string,
   health: number,
   deck: string[],
+  validEmojis: string[],
   artifacts: string[],
+  validArtifacts: string[],
 }
 
-const classes: DeepReadonly<gameClass[]> = [
+const classes: gameClass[] = [
   {
     name: 'Warrior',
     icon: '🔴',
     healthIcon: '❤️',
     health: 50,
     deck: ['👊','👊','👊','✋','💪'],
+    validEmojis: ['👊','👏','✋','💪','🦵'],
     artifacts: ['💖'],
+    validArtifacts: ['💖', '🦾'],
   },
   // below are just ideas
   {
@@ -25,7 +27,9 @@ const classes: DeepReadonly<gameClass[]> = [
     healthIcon: '💚',
     health: 35,
     deck: ['👊','✋','✋','✋','🧪'],
+    validEmojis: [],
     artifacts: ['♻️'],
+    validArtifacts: ['♻️'],
   },
   {
     name: 'Wizard',
@@ -33,7 +37,9 @@ const classes: DeepReadonly<gameClass[]> = [
     healthIcon: '💙',
     health: 25,
     deck: ['👊','👊','✋','✋','🔥'],
+    validEmojis: [],
     artifacts: ['🌙'],
+    validArtifacts: ['🌙'],
   },
   {
     name: 'Necromancer',
@@ -41,7 +47,9 @@ const classes: DeepReadonly<gameClass[]> = [
     healthIcon: '💜',
     health: 30,
     deck: ['👊','✋','✋','💀','💀'],
+    validEmojis: [],
     artifacts: ['⚰️'],
+    validArtifacts: ['⚰️'],
   },
   {
     name: 'Priest',
@@ -49,7 +57,9 @@ const classes: DeepReadonly<gameClass[]> = [
     healthIcon: '💛',
     health: 40,
     deck: ['👊','👊','✋','✋','🙏'],
+    validEmojis: [],
     artifacts: ['✝️'],
+    validArtifacts: ['✝️'],
   },
 ]
 

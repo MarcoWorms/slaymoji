@@ -1,6 +1,20 @@
 import {monsters, floorMonsterPacks, monster} from './models/monsters';
 import EMOJIS from './models/emojis'
 import ARTIFACTS from './models/artifacts'
+import CLASSES from './models/classes'
+
+// Randomize array in-place using Durstenfeld shuffle algorithm, an optimized version of Fisher-Yate
+// lazily stolen from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+  }
+}
+
+const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => entry.icon === icon))
 
 const mockPlayer = {
   className: 'Warrior',
@@ -8,12 +22,11 @@ const mockPlayer = {
   healthIcon: '❤️',
   health: 50,
   deck: ['👊','👊','👊','✋','💪'],
+  emojisPerTurn: 3,
   artifacts: ['💖'],
   attackPower: 0,
   blockPower: 0,
 }
-
-const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => entry.icon === icon))
 
 export const run = (player=mockPlayer, floor:number) => {
   // get random monster pack for this floor
@@ -57,11 +70,11 @@ export const run = (player=mockPlayer, floor:number) => {
 
   return {
     player,
-    playerWon: true, // TODO: check who won on win condition
+    playerWon: player.health > 0,
     log: `Enemies: ${
       combatState.monsters.map(monster => monster.icon).join(' ')
     }\n\n${
-      combatState.turns.join('\n')
+      combatState.turns.join('\n\n')
     }\n\n${
       true ? 'You won!' : 'You lost!'
     }`,
@@ -69,8 +82,25 @@ export const run = (player=mockPlayer, floor:number) => {
 
 }
 
+const castThisTurnEmojis = (caster, targets) => caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => emoji.cast(caster, targets))  
+
 function executeTurn (combatState, turn) {
-  combatState.turns[turn] = `Turn ${turn}: result`
+
+  const player = combatState.player
+  const monsters = combatState.monsters
+
+  // shuffle decks to randomize cards played this turn
+  shuffleArray(player.deck)
+  monsters.forEach(monster => shuffleArray(monster.deck))
+
+  // casts emojis for everyone this turn
+  castThisTurnEmojis(player, monsters)
+  monsters.forEach(monster => {
+    castThisTurnEmojis(monster, [player])
+  })
+
+  // TODO: make logs pretty using emojis descriptions
+  combatState.turns[turn] = `Turn ${turn}:\n\n${JSON.stringify(player)}\n\n${JSON.stringify(monsters)}`
   return combatState
 }
 
