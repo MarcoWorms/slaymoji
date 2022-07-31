@@ -7,7 +7,7 @@ enum floorTypes {
   shop = 1, // trade gold for emojis (or burn emojis with gold)
   rest = 1 , // choose between healing and duplicating an emoji
   miniboss = 1  , // combat but monster is from miniboss pool
-  event = 2, // random event (has many sub-types to be described later)
+  event = 2, // random event (has many sub-types to be described later, can also be combat or miniboss)
   boss, // combat but monster is from boss pool, has fixed turns so no chance factor needed
 }
 const f = floorTypes
