@@ -1,4 +1,4 @@
-import {monsters, floorMonsterPacks, monster} from './models/monsters.js';
+import {MONSTERS, floorMonsterPacks, monster} from './models/monsters.js';
 import EMOJIS, { emojiTypes } from './models/emojis.js'
 import ARTIFACTS, { artifactTriggers } from './models/artifacts.js'
 import CLASSES from './models/classes.js'
@@ -41,11 +41,8 @@ export const run = ({ player, floor }) => {
       artifacts: unwrapIcons(player.artifacts, ARTIFACTS),
       block: 0,
     },
-    monsters: monstersThisFloor
     // unwrap monster pack
-      ?.map(monsterName =>
-        monsters.find(monster => monster.name === monsterName)
-      )
+    monsters: unwrapIcons(monstersThisFloor, MONSTERS)
       // resolve monster health for this floor
       .map((monster) => ({
         ...monster,
@@ -77,7 +74,7 @@ export const run = ({ player, floor }) => {
 
   // cast player artifacts that has combatWon trigger type
   combatState.player.health > 0
-    && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, monsters))
+    && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, combatState.monsters))
 
   const makeLog = combatState => `Floor ${floor}, Enemies: ${
     combatState.monsters.map(monster => monster.icon).join(' ')
@@ -94,11 +91,10 @@ export const run = ({ player, floor }) => {
       log: makeLog(combatState),
       rewards: {
         gold: 5 + floor,
-        pickOneEmoji: Array.from({ length: 3 }).map(() =>
-          CLASSES
-            ?.find(clas => clas.name === combatState.player.className)
-            ?.validEmojis[Math.floor(Math.random() * EMOJIS.length)]
-        ),
+        pickOneEmoji: Array.from({ length: 3 }).map(() => {
+          const clas = CLASSES?.find(clas => clas.name === combatState.player.className)
+          return clas?.validEmojis[Math.floor(Math.random() * clas?.validEmojis.length)]
+        }),
       }
     }
     : {

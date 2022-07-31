@@ -58,4 +58,11 @@ export default [
       caster.blockPower += 1
     },
   },
+  // emoji ideas
+  { description: 'Enemies deal half damage next turn' },
 ]
+
+// TODO: card types to implement later, initially fixed but maybe this could be dinamically added on emojis through shops and random events
+// exhaust: card is removed from deck this floor after playing it once, comes backl next floor
+// unique: effect is only applied once even if card is played multiple times ion a turn
+// clone: when played add one temporary copy of the card to your deck for this floor
