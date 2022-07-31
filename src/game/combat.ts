@@ -18,8 +18,9 @@ const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => 
 
 export const run = ({ player, floor }) => {
   // get random monster pack for this floor
-  const monstersThisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)?.monstersPacks[
-    Math.floor(Math.random() * floorMonsterPacks[floor].monstersPacks.length)
+  const monstersThisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)?.monstersPacks?.[
+    // @ts-ignore
+    Math.floor(Math.random() * floorMonsterPacks?.find(floorData => floorData?.floor === floor)?.monstersPacks?.length)
   ]
 
   // set initial combat state
@@ -49,6 +50,8 @@ export const run = ({ player, floor }) => {
         artifacts: unwrapIcons(monster.artifacts, ARTIFACTS),
       })),
   }
+
+  console.log(combatState)
 
   const winConditionMet = ({ player, monsters }) => (
     player.health <= 0
@@ -109,9 +112,6 @@ const castThisTurnArtifacts = (caster, targets) => caster.health > 0 && caster.a
 )
 
 function executeTurn (combatState, turn) {
-
-  // TODO: remove console.log
-  console.log(combatState)
 
   const player = combatState.player
   const monsters = combatState.monsters
