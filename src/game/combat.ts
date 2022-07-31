@@ -22,10 +22,12 @@ const wrapIcons = (player) => {
 }
 
 export const run = ({ player, floor }) => {
+
   // get random monster pack for this floor
-  const monstersThisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)?.monstersPacks?.[
+  const thisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)
+  const monstersThisFloor = thisFloor?.monstersPacks?.[
     // @ts-ignore
-    Math.floor(Math.random() * floorMonsterPacks?.find(floorData => floorData?.floor === floor)?.monstersPacks?.length)
+    Math.floor(Math.random() * thisFloor?.monstersPacks?.length)
   ]
 
   // set initial combat state
@@ -37,9 +39,10 @@ export const run = ({ player, floor }) => {
       // unwrap player deck and artifacts (unwrap = expand string to object)
       deck: unwrapIcons(player.deck, EMOJIS),
       artifacts: unwrapIcons(player.artifacts, ARTIFACTS),
+      block: 0,
     },
     monsters: monstersThisFloor
-      // unwrap monster pack
+    // unwrap monster pack
       ?.map(monsterName =>
         monsters.find(monster => monster.name === monsterName)
       )
@@ -53,6 +56,7 @@ export const run = ({ player, floor }) => {
         ...monster,
         deck: unwrapIcons(monster.deck, EMOJIS),
         artifacts: unwrapIcons(monster.artifacts, ARTIFACTS),
+        block: 0,
       })),
   }
 
@@ -63,11 +67,13 @@ export const run = ({ player, floor }) => {
   )
 
   // while no one has 0 health we will have another turn, eventually someone has to die (enforced by game-design)
-  let turn = 0
+  let turn = 1
   while (!winConditionMet(combatState)) {
     combatState = executeTurn(combatState, turn)
     turn += 1
   }
+  combatState.player.attackPower = 0
+  combatState.player.blockPower = 0
 
   // cast player artifacts that has combatWon trigger type
   combatState.player.health > 0
