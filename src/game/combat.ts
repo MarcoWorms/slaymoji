@@ -81,7 +81,7 @@ export const run = ({ player, floor }) => {
 
   const makeLog = combatState => `Floor ${floor}, Enemies: ${
     combatState.monsters.map(monster => monster.icon).join(' ')
-  }\n\n${
+  }${
     combatState.turns.join('\n\n')
   }\n\n${
     true ? 'You won!' : 'You lost!'
@@ -164,10 +164,12 @@ function executeTurn (combatState, turn) {
       monster.icon
       + ' ('
       + (monster.health > 0 ? monster.health : 'dead')
-      + '): '
+      + ')'
+      + (monster.health > 0 ? ': ' : '')
+      + ((monster.health > 0 && monster.artifacts.length > 0) ? monster.artifacts.map(artifact => artifact.icon).join(' ') + ' ' : '')
       + (monster.health > 0 ? monster.deck.slice(0, monster.emojisPerTurn).map(emoji => emoji.icon) : '')
     ).join('\n')
-  }`
+  }`.trim()
 
   return combatState
 }
@@ -185,14 +187,16 @@ const mockPlayer = {
 }
 
 // everything below is test and should be removed later
+console.log('deck:', mockPlayer.deck)
 const testCombat1 = run({ player: mockPlayer, floor: 1 })
 console.log(testCombat1.log)
 console.log(testCombat1.rewards)
-console.log(testCombat1.player)
+console.log('remaining health:', testCombat1.player.health)
 
-testCombat1.player.deck.push('🦵') // simulates a reward picked
+testCombat1.player.deck.push(testCombat1?.rewards?.pickOneEmoji?.[Math.floor(Math.random() * testCombat1.rewards.pickOneEmoji.length)]) // simulates a reward picked
 
+console.log('deck:', testCombat1.player.deck)
 const testCombat2 = run({ player: testCombat1.player, floor: 2 })
 console.log(testCombat2.log)
 console.log(testCombat2.rewards)
-console.log(testCombat2.player)
+console.log('remaining health:', testCombat2.player.health)
