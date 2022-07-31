@@ -51,8 +51,6 @@ export const run = ({ player, floor }) => {
       })),
   }
 
-  console.log(combatState)
-
   const winConditionMet = ({ player, monsters }) => (
     player.health <= 0
     ||
@@ -176,4 +174,4 @@ const mockPlayer = {
 }
 
 // uncomment to test combat
-console.log(run({ player: mockPlayer, floor: 1 }))
+console.log(run({ player: mockPlayer, floor: 1 }).log)
