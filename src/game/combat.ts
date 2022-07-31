@@ -174,4 +174,6 @@ const mockPlayer = {
 }
 
 // uncomment to test combat
-console.log(run({ player: mockPlayer, floor: 1 }).log)
+const testCombat = run({ player: mockPlayer, floor: 1 })
+console.log(testCombat.log)
+console.log(testCombat.rewards)
