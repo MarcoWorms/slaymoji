@@ -138,21 +138,27 @@ function executeTurn (combatState, turn) {
   })
 
   // cleans block for next turn
-  if (player.preventBlockFromCleaning) { // some skills might accumulate block for next turn
-    player.preventBlockFromCleaningNextTurn = false
-  } else {
-    player.block = 0
-  }
+  player.block = 0
   monsters.forEach(monster => {
-    if (monster.preventBlockFromCleaning) {
-      monster.preventBlockFromCleaningNextTurn = false
-    } else {
-      monster.block = 0
-    }
+    monster.block = 0
   })
 
   // TODO: make logs pretty using emojis descriptions
-  combatState.turns[turn] = `Turn ${turn}:\n\n${JSON.stringify(player, null, 2)}\n\n${JSON.stringify(monsters, null, 2)}`
+  combatState.turns[turn] = `Turn ${turn}:\n\n${
+    player.icon
+    + ' ('
+    + player.health
+    + '): '
+    + player.deck.slice(0, player.emojisPerTurn).map(emoji => emoji.icon)
+  }\n\n${
+    monsters.map(monster =>
+      monster.icon
+      + ' ('
+      + (monster.health > 0 ? monster.health : 'dead')
+      + '): '
+      + (monster.health > 0 ? monster.deck.slice(0, monster.emojisPerTurn).map(emoji => emoji.icon) : '')
+    ).join('\n')
+  }`
 
   return combatState
 }

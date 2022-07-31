@@ -31,6 +31,7 @@ export type monster = {
   artifacts: string[],
   attackPower: number,
   blockPower: number,
+  block?: number,
 }
 
 export const monsters = [
