@@ -73,7 +73,7 @@ export const run = ({ player, floor }) => {
   combatState.player.health > 0
     && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, monsters))
 
-  const makeLog = combatState => `Enemies: ${
+  const makeLog = combatState => `Floor ${floor}, Enemies: ${
     combatState.monsters.map(monster => monster.icon).join(' ')
   }\n\n${
     combatState.turns.join('\n\n')
@@ -178,8 +178,15 @@ const mockPlayer = {
   blockPower: 0,
 }
 
-// uncomment to test combat
-const testCombat = run({ player: mockPlayer, floor: 1 })
-console.log(testCombat.log)
-console.log(testCombat.rewards)
-console.log(testCombat.player)
+// everything below is test and should be removed later
+const testCombat1 = run({ player: mockPlayer, floor: 1 })
+console.log(testCombat1.log)
+console.log(testCombat1.rewards)
+console.log(testCombat1.player)
+
+testCombat1.player.deck.push('🦵') // simulates a reward picked
+
+const testCombat2 = run({ player: testCombat1.player, floor: 2 })
+console.log(testCombat2.log)
+console.log(testCombat2.rewards)
+console.log(testCombat2.player)
