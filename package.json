@@ -16,7 +16,8 @@
     "start": "tsc-watch --onSuccess \"nodemon --exec npm run node\"",
     "prenode": "npm run copy-screens-to-dist",
     "node": "node dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "test-combat": "npm run clean-and-copy-screens && npm run build && node dist/game/combat.js"
   },
   "dependencies": {
     "dotenv": "16.0.1",

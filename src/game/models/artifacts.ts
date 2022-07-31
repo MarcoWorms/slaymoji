@@ -9,7 +9,7 @@ export default [
     icon: '💖',
     description: 'Heals 5 hp after every combat',
     trigger: t.COMBAT_WON,
-    cast: (caster, targets) => {
+    cast: (caster, _targets) => {
       caster.health += 5
     }
   },
@@ -17,13 +17,13 @@ export default [
     icon: '🦾',
     description: 'Deal 1 damage to the all enemies every turn',
     trigger: t.EVERY_TURN,
-    cast: (caster, targets) => {
+    cast: (_caster, targets) => {
       targets.forEach(target => target.health -= 1)
     }
   },
 ] as artifact[]
 
-export type artifact {
+export type artifact = {
   icon: string,
   description: string,
   trigger: artifactTriggers,

@@ -14,25 +14,25 @@ export default [
     cast: (caster, targets) => {
       targets.forEach(target => target.health -= 2 + caster.attackPower)
     },
-  }
+  },
   {
     icon: '✋',
     description: 'Block 5 damage',
-    cast: (caster, targets) => {
+    cast: (caster, _targets) => {
       caster.block += 5 + caster.blockPower
     },
   },
   {
     icon: '💪',
     description: 'Increase your attack power by 1 until the end of this floor',
-    cast: (caster, targets) => {
+    cast: (caster, _targets) => {
       caster.attackPower += 1
     },
   },
   {
     icon: '🦵',
     description: 'Increase your block power by 1 until the end of this floor',
-    cast: (caster, targets) => {
+    cast: (caster, _targets) => {
       caster.blockPower += 1
     },
   },

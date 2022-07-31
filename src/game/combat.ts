@@ -16,19 +16,7 @@ function shuffleArray(array) {
 
 const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => entry.icon === icon))
 
-const mockPlayer = {
-  className: 'Warrior',
-  icon: '🔴',
-  healthIcon: '❤️',
-  health: 50,
-  deck: ['👊','👊','👊','✋','💪'],
-  emojisPerTurn: 3,
-  artifacts: ['💖'],
-  attackPower: 0,
-  blockPower: 0,
-}
-
-export const run = (player=mockPlayer, floor:number) => {
+export const run = ({ player, floor }) => {
   // get random monster pack for this floor
   const monstersThisFloor = floorMonsterPacks[floor].monstersPacks[
     Math.floor(Math.random() * floorMonsterPacks[floor].monstersPacks.length)
@@ -52,7 +40,7 @@ export const run = (player=mockPlayer, floor:number) => {
       // resolve monster health for this floor
       .map((monster) => ({
         ...monster,
-        health: monster.maxHealth(floor),
+        health: monster?.maxHealth(floor),
       }))
       // unwrap monster deck and artifacts
       .map((monster) => ({
@@ -90,8 +78,8 @@ export const run = (player=mockPlayer, floor:number) => {
         gold: 5 + floor,
         pickOneEmoji: Array.from({ length: 3 }).map(() =>
           CLASSES
-            .find(clas => clas.name === player.className)
-            [Math.floor(Math.random() * EMOJIS.length)]
+            ?.find(clas => clas.name === player.className)
+            ?.[Math.floor(Math.random() * EMOJIS.length)]
         ),
       }
     }
@@ -134,5 +122,20 @@ function executeTurn (combatState, turn) {
 const winConditionMet = ({ player, monsters }) => (
   player.health <= 0
   ||
-  monsters.any((monster:monster) => monster.health <= 0)
+  monsters.every((monster:monster) => monster.health <= 0)
 )
+
+const mockPlayer = {
+  className: 'Warrior',
+  icon: '🔴',
+  healthIcon: '❤️',
+  health: 50,
+  deck: ['👊','👊','👊','✋','💪'],
+  emojisPerTurn: 3,
+  artifacts: ['💖'],
+  attackPower: 0,
+  blockPower: 0,
+}
+
+// uncomment to test combat
+console.log(run({ player: mockPlayer, floor: 1 }))
