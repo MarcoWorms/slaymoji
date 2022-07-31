@@ -15,6 +15,10 @@ function shuffleArray(array) {
 }
 
 const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => entry.icon === icon))
+const wrapIcons = (player) => {
+  player.deck = player.deck.map(emoji => emoji.icon)
+  player.artifacts = player.deck.map(artifact => artifact.icon)
+}
 
 export const run = ({ player, floor }) => {
   // get random monster pack for this floor
@@ -78,7 +82,7 @@ export const run = ({ player, floor }) => {
 
   return combatState.player.health > 0
     ? {
-      player: combatState.player,
+      player: wrapIcons(combatState.player),
       playerWon: true,
       log: makeLog(combatState),
       rewards: {
@@ -91,7 +95,7 @@ export const run = ({ player, floor }) => {
       }
     }
     : {
-      player: combatState.player,
+      player: wrapIcons(combatState.player),
       playerWon: false,
       log: makeLog(combatState),
     }

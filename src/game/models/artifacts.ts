@@ -4,6 +4,15 @@ export enum artifactTriggers {
 }
 const t = artifactTriggers
 
+const dealDamageWithoutAttackPower = (_caster, target, damage) => {
+  const dmgAfterBlock = damage - target.block
+  if (dmgAfterBlock > 0) {
+    target.health -= dmgAfterBlock
+  } else {
+    target.block -= damage
+  }
+}
+
 export default [
   {
     icon: '💖',
@@ -17,8 +26,8 @@ export default [
     icon: '🦾',
     description: 'Deal 1 damage to the all enemies every turn',
     trigger: t.EVERY_TURN,
-    cast: (_caster, targets) => {
-      targets.forEach(target => target.health -= 1)
+    cast: (caster, targets) => {
+      targets.forEach(target => dealDamageWithoutAttackPower(caster, target, 1))
     }
   },
 ] as artifact[]
