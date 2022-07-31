@@ -66,3 +66,15 @@ export default [
 // exhaust: card is removed from deck this floor after playing it once, comes backl next floor
 // unique: effect is only applied once even if card is played multiple times ion a turn
 // clone: when played add one temporary copy of the card to your deck for this floor
+
+/* emojis for new cards
+
+
+👋 🤚 🖐 ✋ 🖖 👌 🤏 ✌️ 🤞 🤟 🤘 🤙 👈 👉 
+👆 🖕 👇 ☝️ 👍 👎 ✊ 👊 🤛 🤜 👏 🙌 👐 🤲 
+🤝 🙏 ✍️ 💅 🤳 💪 
+🦵 🦶 👂  🧠     
+
+💦💨🌪🔥💥☄️⚡️✨🌟💫🌋🌌🔊🩸💋
+👣👀👅👄🧲🔫💣 🧨🪓🔪🧿💉
+*/
