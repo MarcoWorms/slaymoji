@@ -1,10 +1,15 @@
 const randomTarget = targets => targets[Math.floor(Math.random() * targets.length)]
 
 const dealDamage = (caster, target, damage) => {
-  target.health -= Math.max(((damage + caster.attackPower) - target.block), 0)
+  const dmgAfterBlock = damage + caster.attackPower - target.block
+  if (dmgAfterBlock > 0) {
+    target.health -= dmgAfterBlock
+  } else {
+    target.block -= damage + caster.attackPower
+  }
 }
 
-const pickFirstAlive = targets => targets.find(target => target.health > 0)
+const pickFirstAlive = targets => targets.find(target => target.health > 0) || targets[0] // if none found send a dead one so nothing explodes
 
 export enum emojiTypes {
   ATTACK,

@@ -34,7 +34,7 @@ export const run = ({ player, floor }) => {
     },
     monsters: monstersThisFloor
       // unwrap monster pack
-      .map(monsterName =>
+      ?.map(monsterName =>
         monsters.find(monster => monster.name === monsterName)
       )
       // resolve monster health for this floor
@@ -49,6 +49,12 @@ export const run = ({ player, floor }) => {
         artifacts: unwrapIcons(monster.artifacts, ARTIFACTS),
       })),
   }
+
+  const winConditionMet = ({ player, monsters }) => (
+    player.health <= 0
+    ||
+    monsters.every((monster:monster) => monster.health <= 0)
+  )
 
   // while no one has 0 health we will have another turn, eventually someone has to die (enforced by game-design)
   let turn = 0
@@ -79,7 +85,7 @@ export const run = ({ player, floor }) => {
         pickOneEmoji: Array.from({ length: 3 }).map(() =>
           CLASSES
             ?.find(clas => clas.name === combatState.player.className)
-            ?.[Math.floor(Math.random() * EMOJIS.length)]
+            ?.validEmojis[Math.floor(Math.random() * EMOJIS.length)]
         ),
       }
     }
@@ -90,22 +96,22 @@ export const run = ({ player, floor }) => {
     }
 }
 
-const castThisTurnAttacks = (caster, targets) => caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+const castThisTurnAttacks = (caster, targets) => caster.health > 0 && caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
   emoji.type === emojiTypes.ATTACK && emoji.cast(caster, targets)
 )
 
-const castThisTurnSkills = (caster, targets) => caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+const castThisTurnSkills = (caster, targets) => caster.health > 0 && caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
   emoji.type === emojiTypes.SKILL && emoji.cast(caster, targets)
 )
 
-const castThisTurnArtifacts = (caster, targets) => caster.artifacts.forEach(artifact => 
+const castThisTurnArtifacts = (caster, targets) => caster.health > 0 && caster.artifacts.forEach(artifact => 
   artifact.trigger === artifactTriggers.EVERY_TURN && artifact.cast(caster, targets)
 )
 
 function executeTurn (combatState, turn) {
 
-    // TODO: remove console.log
-    console.log(combatState)
+  // TODO: remove console.log
+  console.log(combatState)
 
   const player = combatState.player
   const monsters = combatState.monsters
@@ -114,7 +120,8 @@ function executeTurn (combatState, turn) {
   shuffleArray(player.deck)
   monsters.forEach(monster => shuffleArray(monster.deck))
 
-  // casts emojis and artiffact effects for everyone this turn
+  // casts emojis and artiffact effects for everyone this turn, in order
+
   castThisTurnSkills(player, monsters)
   monsters.forEach(monster => {
     castThisTurnSkills(monster, [player])
@@ -130,17 +137,25 @@ function executeTurn (combatState, turn) {
     castThisTurnAttacks(monster, [player])
   })
 
+  // cleans block for next turn
+  if (player.preventBlockFromCleaning) { // some skills might accumulate block for next turn
+    player.preventBlockFromCleaningNextTurn = false
+  } else {
+    player.block = 0
+  }
+  monsters.forEach(monster => {
+    if (monster.preventBlockFromCleaning) {
+      monster.preventBlockFromCleaningNextTurn = false
+    } else {
+      monster.block = 0
+    }
+  })
+
   // TODO: make logs pretty using emojis descriptions
   combatState.turns[turn] = `Turn ${turn}:\n\n${JSON.stringify(player, null, 2)}\n\n${JSON.stringify(monsters, null, 2)}`
 
   return combatState
 }
-
-const winConditionMet = ({ player, monsters }) => (
-  player.health <= 0
-  ||
-  monsters.every((monster:monster) => monster.health <= 0)
-)
 
 const mockPlayer = {
   className: 'Warrior',

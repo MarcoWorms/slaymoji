@@ -29,6 +29,8 @@ export type monster = {
   deck: string[],
   emojisPerTurn: number,
   artifacts: string[],
+  attackPower: number,
+  blockPower: number,
 }
 
 export const monsters = [
@@ -38,7 +40,9 @@ export const monsters = [
     maxHealth: (floor:number) => 10 + floor,
     deck: ['👊','👊','👊','✋'],
     emojisPerTurn: 1, // number of emojis that are casted by this monster each turn
-    artifacts: [''],
+    artifacts: [],
+    attackPower: 0,
+    blockPower: 0,
   },
   {
     name: 'Snek',
@@ -47,5 +51,7 @@ export const monsters = [
     deck: ['👊','👊','✋','✋'],
     emojisPerTurn: 1,
     artifacts: ['🦾'],
+    attackPower: 0,
+    blockPower: 0,
   },
 ]
