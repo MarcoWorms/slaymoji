@@ -17,7 +17,8 @@ function shuffleArray(array) {
 const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => entry.icon === icon))
 const wrapIcons = (player) => {
   player.deck = player.deck.map(emoji => emoji.icon)
-  player.artifacts = player.deck.map(artifact => artifact.icon)
+  player.artifacts = player.artifacts.map(artifact => artifact.icon)
+  return player
 }
 
 export const run = ({ player, floor }) => {
@@ -181,3 +182,4 @@ const mockPlayer = {
 const testCombat = run({ player: mockPlayer, floor: 1 })
 console.log(testCombat.log)
 console.log(testCombat.rewards)
+console.log(testCombat.player)
