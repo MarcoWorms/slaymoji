@@ -1,7 +1,7 @@
-import {monsters, floorMonsterPacks, monster} from './models/monsters';
-import EMOJIS from './models/emojis'
-import ARTIFACTS, { artifactTriggers } from './models/artifacts'
-import CLASSES from './models/classes'
+import {monsters, floorMonsterPacks, monster} from './models/monsters.js';
+import EMOJIS, { emojiTypes } from './models/emojis.js'
+import ARTIFACTS, { artifactTriggers } from './models/artifacts.js'
+import CLASSES from './models/classes.js'
 
 // Randomize array in-place using Durstenfeld shuffle algorithm, an optimized version of Fisher-Yate
 // lazily stolen from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -18,7 +18,7 @@ const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => 
 
 export const run = ({ player, floor }) => {
   // get random monster pack for this floor
-  const monstersThisFloor = floorMonsterPacks[floor].monstersPacks[
+  const monstersThisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)?.monstersPacks[
     Math.floor(Math.random() * floorMonsterPacks[floor].monstersPacks.length)
   ]
 
@@ -58,8 +58,8 @@ export const run = ({ player, floor }) => {
   }
 
   // cast player artifacts that has combatWon trigger type
-  player.health > 0
-    && player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, monsters))
+  combatState.player.health > 0
+    && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, monsters))
 
   const makeLog = combatState => `Enemies: ${
     combatState.monsters.map(monster => monster.icon).join(' ')
@@ -69,33 +69,43 @@ export const run = ({ player, floor }) => {
     true ? 'You won!' : 'You lost!'
   }`
 
-  return player.health > 0
+  return combatState.player.health > 0
     ? {
-      player,
+      player: combatState.player,
       playerWon: true,
       log: makeLog(combatState),
       rewards: {
         gold: 5 + floor,
         pickOneEmoji: Array.from({ length: 3 }).map(() =>
           CLASSES
-            ?.find(clas => clas.name === player.className)
+            ?.find(clas => clas.name === combatState.player.className)
             ?.[Math.floor(Math.random() * EMOJIS.length)]
         ),
       }
     }
     : {
-      player,
+      player: combatState.player,
       playerWon: false,
       log: makeLog(combatState),
     }
 }
 
-const castThisTurnEmojis = (caster, targets) => caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => emoji.cast(caster, targets))  
+const castThisTurnAttacks = (caster, targets) => caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+  emoji.type === emojiTypes.ATTACK && emoji.cast(caster, targets)
+)
+
+const castThisTurnSkills = (caster, targets) => caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+  emoji.type === emojiTypes.SKILL && emoji.cast(caster, targets)
+)
+
 const castThisTurnArtifacts = (caster, targets) => caster.artifacts.forEach(artifact => 
   artifact.trigger === artifactTriggers.EVERY_TURN && artifact.cast(caster, targets)
 )
 
 function executeTurn (combatState, turn) {
+
+    // TODO: remove console.log
+    console.log(combatState)
 
   const player = combatState.player
   const monsters = combatState.monsters
@@ -105,17 +115,24 @@ function executeTurn (combatState, turn) {
   monsters.forEach(monster => shuffleArray(monster.deck))
 
   // casts emojis and artiffact effects for everyone this turn
-  castThisTurnEmojis(player, monsters)
-  castThisTurnArtifacts(player, monsters)
-  
-  
+  castThisTurnSkills(player, monsters)
   monsters.forEach(monster => {
-    castThisTurnEmojis(monster, [player])
+    castThisTurnSkills(monster, [player])
+  })
+
+  castThisTurnArtifacts(player, monsters)
+  monsters.forEach(monster => {
     castThisTurnArtifacts(monster, [player])
   })
 
+  castThisTurnAttacks(player, monsters)
+  monsters.forEach(monster => {
+    castThisTurnAttacks(monster, [player])
+  })
+
   // TODO: make logs pretty using emojis descriptions
-  combatState.turns[turn] = `Turn ${turn}:\n\n${JSON.stringify(player)}\n\n${JSON.stringify(monsters)}`
+  combatState.turns[turn] = `Turn ${turn}:\n\n${JSON.stringify(player, null, 2)}\n\n${JSON.stringify(monsters, null, 2)}`
+
   return combatState
 }
 

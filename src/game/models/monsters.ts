@@ -43,7 +43,7 @@ export const monsters = [
   {
     name: 'Snek',
     icon: '🐍',
-    maxHealth: (floor:number) => 30 + floor,
+    maxHealth: (floor:number) => 10 + floor,
     deck: ['👊','👊','✋','✋'],
     emojisPerTurn: 1,
     artifacts: ['🦾'],
