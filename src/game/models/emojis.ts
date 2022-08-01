@@ -1,4 +1,6 @@
-const randomTarget = targets => targets[Math.floor(Math.random() * targets.length)]
+const pickRandomAlive = targets => targets
+  .filter(target => target.health > 0)
+  [Math.floor(Math.random() * targets.length)]
 
 const dealDamage = (caster, target, damage) => {
   const dmgAfterBlock = damage + caster.attackPower - target.block
@@ -12,34 +14,50 @@ const dealDamage = (caster, target, damage) => {
 const pickFirstAlive = targets => targets.find(target => target.health > 0) || targets[0] // if none found send a dead one so nothing explodes
 
 export enum emojiTypes {
-  ATTACK,
   SKILL, // skills of all combat participants are played before attacks
+  ATTACK,
 }
 const e = emojiTypes
 
 export default [
   {
     icon: '👊',
-    description: 'Deal 4 damage to the front enemy',
+    description: 'Deal 3 damage to the front enemy',
     type: e.ATTACK,
     cast: (caster, targets) => {
-      dealDamage(caster, pickFirstAlive(targets), 4)
+      dealDamage(caster, pickFirstAlive(targets), 3)
     },
   },
   {
     icon: '👏',
-    description: 'Deal 2 damage to all enemies',
+    description: 'Deal 3 damage to all enemies',
     type: e.ATTACK,
     cast: (caster, targets) => {
-      targets.forEach(target => dealDamage(caster, target, 2))
+      targets.forEach(target => dealDamage(caster, target, 3))
+    },
+  },
+  {
+    icon: '🤞',
+    description: 'Deal 6 damage to a random enemy',
+    type: e.ATTACK,
+    cast: (caster, targets) => {
+      dealDamage(caster, pickRandomAlive(targets), 6)
     },
   },
   {
     icon: '✋',
-    description: 'Block 5 damage',
+    description: 'Block 4 damage',
     type: e.SKILL,
     cast: (caster, _targets) => {
-      caster.block += 5 + caster.blockPower
+      caster.block += 4 + caster.blockPower
+    },
+  },
+  {
+    icon: '✊',
+    description: 'Block 7 damage',
+    type: e.SKILL,
+    cast: (caster, _targets) => {
+      caster.block += 7 + caster.blockPower
     },
   },
   {
@@ -58,14 +76,21 @@ export default [
       caster.blockPower += 1
     },
   },
-  // emoji ideas
-  { description: 'Enemies deal half damage next turn' },
 ]
 
 // TODO: card types to implement later, initially fixed but maybe this could be dinamically added on emojis through shops and random events
 // exhaust: card is removed from deck this floor after playing it once, comes backl next floor
 // unique: effect is only applied once even if card is played multiple times ion a turn
 // clone: when played add one temporary copy of the card to your deck for this floor
+
+// TODO: implement combat statuses to make easier to make more cards
+// weaken: deal 25% less damage
+// vulnerable: take 25% more damage
+// dazed: add useless emoji to enemy deck
+// silenced: skills wont work next turn
+// disarmed: attacks wont work next turn
+
+
 
 /* emojis for new cards
 

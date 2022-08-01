@@ -30,9 +30,16 @@ export default [
       targets.forEach(target => dealDamageWithoutAttackPower(caster, target, 1))
     }
   },
+  {
+    icon: '🦿',
+    description: 'Block 2 damage every turn',
+    trigger: t.EVERY_TURN,
+    cast: (caster, _targets) => {
+      caster.block += 2
+    }
+  },
   // artifact ideas
   { description: 'Deal x damage to a random target every turn' },
-  { description: 'Win x block every turn' },
   { description: 'Increase gold gained every combat by X' },
   { description: 'Rewards show 1 more option' },
   { description: 'Random Events will no longet be combats' },
