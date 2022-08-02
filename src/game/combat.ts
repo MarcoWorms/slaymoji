@@ -42,7 +42,6 @@ const defaultCombatStatus = {
 }
 
 export const run = ({ player, floor }) => {
-  console.log(player)
 
   // get random monster pack for this floor
   const thisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)
@@ -130,7 +129,7 @@ export const run = ({ player, floor }) => {
     combatState.player.health > 0 ? 'You won!' : 'You lost!'
   }\n\n${
     combatState.player.artifacts.filter(artifact => artifact.trigger === artifactTriggers.COMBAT_WON)
-      .map(artifact =>  artifact.icon + ' ' + artifact.description).join('\n')
+      .map(artifact =>  artifact.icon + ' ' + artifact.description(combatState.player)).join('\n')
   }`
 
   return combatState.player.health > 0
@@ -153,17 +152,17 @@ export const run = ({ player, floor }) => {
     }
 }
 
-const castThisTurnAttacks = (caster, targets) => caster.health > 0 && caster.stunned === 0 && caster.disarmed === 0 && caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+const castThisTurnAttacks = (caster, targets) => (caster.health > 0 && caster.stunned === 0 && caster.disarmed === 0) ? caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
   emoji.type === emojiTypes.ATTACK && emoji.cast(caster, targets)
-)
+) : true
 
-const castThisTurnSkills = (caster, targets) => caster.health > 0 && caster.stunned === 0 && caster.silenced === 0 && caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+const castThisTurnSkills = (caster, targets) => (caster.health > 0 && caster.stunned === 0 && caster.silenced === 0) ? caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
   emoji.type === emojiTypes.SKILL && emoji.cast(caster, targets)
-)
+) : true
 
-const castThisTurnArtifacts = (caster, targets) => caster.health > 0 && caster.artifacts.forEach(artifact => 
+const castThisTurnArtifacts = (caster, targets) => (caster.health > 0) ? caster.artifacts.forEach(artifact => 
   artifact.trigger === artifactTriggers.EVERY_TURN && artifact.cast(caster, targets)
-)
+) : true
 
 function executeTurn (combatState, turn) {
 
@@ -175,7 +174,8 @@ function executeTurn (combatState, turn) {
   monsters.forEach(monster => shuffleArray(monster.deck))
 
   monsters.forEach(monster => {
-      monster.castedThisTurn = false
+      monster.castedThisTurn = []
+      monster.castedArtifactsThisTurn = []
   })
 
   // casts emojis and artiffact effects for everyone this turn, in order
@@ -183,21 +183,28 @@ function executeTurn (combatState, turn) {
   castThisTurnSkills(player, monsters)
   monsters.forEach(monster => {
     if (!castThisTurnSkills(monster, [player])) {
-      monster.castedThisTurn = true
+      monster.castedThisTurn = monster.castedThisTurn.concat(
+        monster.deck.slice(0, monster.emojisPerTurn)
+          .filter(emoji => emoji.type === emojiTypes.SKILL)
+      )
     }
   })
 
   castThisTurnArtifacts(player, monsters)
   monsters.forEach(monster => {
     if (!castThisTurnArtifacts(monster, [player])) {
-      monster.castedThisTurn = true
+      monster.castedArtifactsThisTurn = monster.artifacts
+        .filter(artifact => artifact.trigger === artifactTriggers.EVERY_TURN)
     }
   })
 
   castThisTurnAttacks(player, monsters)
   monsters.forEach(monster => {
     if (!castThisTurnAttacks(monster, [player])) {
-      monster.castedThisTurn = true
+      monster.castedThisTurn = monster.castedThisTurn.concat(
+        monster.deck.slice(0, monster.emojisPerTurn)
+          .filter(emoji => emoji.type === emojiTypes.ATTACK)
+      )
     }
   })
 
@@ -228,7 +235,6 @@ function executeTurn (combatState, turn) {
   cleanBlockAndStatus(player)
   monsters.forEach(cleanBlockAndStatus)
 
-  const displayArtifact = emoji => '\n  ' + emoji.icon + ' ' + emoji.description
   const displayEmoji = (emoji, caster) => '\n  ' + emoji.icon + ' ' + emoji.description(caster)
 
   // TODO: make logs pretty using emojis descriptions
@@ -241,7 +247,7 @@ function executeTurn (combatState, turn) {
     + ((player.health > 0 && player.artifacts.length > 0)
       ? player.artifacts
         .filter(artifact => artifact.trigger === artifactTriggers.EVERY_TURN)
-        .map(displayArtifact)
+        .map(artifact => displayEmoji(artifact, player))
         .join('')
       : '')
     + player.deck.slice(0, player.emojisPerTurn)
@@ -255,12 +261,10 @@ function executeTurn (combatState, turn) {
       + (monster.health > 0 ? monster.health : '')
       + ')'
       + (monster.health > 0 ? ': ' : '')
-      + ((monster.castedThisTurn && monster.artifacts.length > 0)
-        ? monster.artifacts
-          .map(displayArtifact)
-          .join('')
+      + ((monster.castedArtifactsThisTurn.length > 0)
+        ? monster.castedArtifactsThisTurn.map(artifact => displayEmoji(artifact, monster)).join('')
         : '')
-      + (monster.castedThisTurn ? monster.deck.slice(0, monster.emojisPerTurn)
+      + (monster.castedThisTurn.length > 0 ? monster.deck.slice(0, monster.emojisPerTurn)
         .map(emoji => displayEmoji(emoji, monster)) : '')
     ).join('\n')
   }`.trim()
