@@ -16,10 +16,11 @@ const dealDamageWithoutAttackPower = (_caster, target, damage) => {
 export default [
   {
     icon: '💖',
-    description: 'Heals 5 hp after every combat',
+    description: 'Heals 5 hp after every combat won',
     trigger: t.COMBAT_WON,
     cast: (caster, _targets) => {
       caster.health += 5
+      caster.health = Math.min(caster.health, caster.maxHealth)
     }
   },
   {

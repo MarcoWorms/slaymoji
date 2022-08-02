@@ -43,7 +43,7 @@ export type monster = {
   block?: number,
 }
 
-export const MONSTERS = [
+export default [
   {
     icon: '🐀',
     getMaxHealth: (floor:number) => 9 + floor,

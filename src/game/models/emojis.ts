@@ -22,7 +22,7 @@ const e = emojiTypes
 export default [
   {
     icon: '👊',
-    description: 'Deal 3 damage to front enemy',
+    description: caster => `Deal ${3 + caster.attackPower} damage to front enemy`,
     type: e.ATTACK,
     cast: (caster, targets) => {
       dealDamage(caster, pickFirstAlive(targets), 3)
@@ -30,7 +30,7 @@ export default [
   },
   {
     icon: '👏',
-    description: 'Deal 3 damage to all enemies',
+    description: caster => `Deal ${3 + caster.attackPower} damage to all enemies`,
     type: e.ATTACK,
     cast: (caster, targets) => {
       targets.forEach(target => dealDamage(caster, target, 3))
@@ -38,7 +38,7 @@ export default [
   },
   {
     icon: '🤞',
-    description: 'Deal 6 damage to a random enemy',
+    description: caster => `Deal ${6 + caster.attackPower} damage to a random enemy`,
     type: e.ATTACK,
     cast: (caster, targets) => {
       dealDamage(caster, pickRandomAlive(targets), 6)
@@ -46,7 +46,7 @@ export default [
   },
   {
     icon: '✋',
-    description: 'Block 4 damage',
+    description: caster => `Block ${4 + caster.blockPower} damage`,
     type: e.SKILL,
     cast: (caster, _targets) => {
       caster.block += 4 + caster.blockPower
@@ -54,7 +54,7 @@ export default [
   },
   {
     icon: '✊',
-    description: 'Block 7 damage',
+    description: caster => `Block ${7 + caster.blockPower} damage`,
     type: e.SKILL,
     cast: (caster, _targets) => {
       caster.block += 7 + caster.blockPower
@@ -63,7 +63,7 @@ export default [
   {
     icon: '💪',
     type: e.SKILL,
-    description: 'Increase attack power by 1',
+    description: _caster => `Increase attack power by 1 this floor`,
     cast: (caster, _targets) => {
       caster.attackPower += 1
     },
@@ -71,7 +71,7 @@ export default [
   {
     icon: '🦵',
     type: e.SKILL,
-    description: 'Increase block power by 1',
+    description: _caster => `Increase block power by 1 this floor`,
     cast: (caster, _targets) => {
       caster.blockPower += 1
     },

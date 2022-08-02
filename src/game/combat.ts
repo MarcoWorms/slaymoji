@@ -1,4 +1,4 @@
-import {MONSTERS, floorMonsterPacks, monster} from './models/monsters.js';
+import MONSTERS, { floorMonsterPacks, monster } from './models/monsters.js';
 import EMOJIS, { emojiTypes } from './models/emojis.js'
 import ARTIFACTS, { artifactTriggers } from './models/artifacts.js'
 import CLASSES from './models/classes.js'
@@ -15,11 +15,11 @@ function shuffleArray(array) {
 }
 
 const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => entry.icon === icon))
-const wrapIcons = (player) => {
-  player.deck = player.deck.map(emoji => emoji.icon)
-  player.artifacts = player.artifacts.map(artifact => artifact.icon)
-  return player
-}
+const wrapIcons = (player) => ({
+  ...player,
+  deck: player.deck.map(emoji => emoji.icon),
+  artifacts: player.artifacts.map(artifact => artifact.icon),
+})
 
 // can be overriden on monster and class models
 const defaultCombatStatus = { 
@@ -30,7 +30,6 @@ const defaultCombatStatus = {
   disarmed: 0, // attacks wont work next turn
   stunned: 0, // cant play next turn
   fortified: 0, // block persists next turn
-  dazed: 0, // add useless emoji to deck
   // special status
   block: 0, // fully removed on the end of the turn
   attackPower: 0, // lasts the entire floor
@@ -38,9 +37,12 @@ const defaultCombatStatus = {
   emojisPerTurn: 1, // emojis cast per turn
   artifacts: [], // artifacts owned
   healthIcon: '🖤', // icon for health
+  // dev only
+  castedThisTurn: false, // used to track for proper logging when killed
 }
 
 export const run = ({ player, floor }) => {
+  console.log(player)
 
   // get random monster pack for this floor
   const thisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)
@@ -50,18 +52,22 @@ export const run = ({ player, floor }) => {
       return monsterData.allow[0]
     })
   })
-
+  const addInitialPowers = player => ({
+    ...player,
+    initialAttackPower: player.attackPower,
+    initialBlockPower: player.blockPower,
+  })
   // set initial combat state
   let combatState = {
     floor,
     turns: [],
-    player: {
+    player: addInitialPowers({
       ...defaultCombatStatus,
       ...player,
       // unwrap player deck and artifacts (unwrap = expand string to object)
       deck: unwrapIcons(player.deck, EMOJIS),
       artifacts: unwrapIcons(player.artifacts, ARTIFACTS),
-    },
+    }),
     // unwrap monster pack
     monsters: unwrapIcons(monstersThisFloor, MONSTERS)
       // resolve monster health for this floor
@@ -76,10 +82,12 @@ export const run = ({ player, floor }) => {
         ...monster,
         deck: unwrapIcons(monster.deck, EMOJIS),
         artifacts: unwrapIcons(monster.artifacts, ARTIFACTS),
-      }))
+      })),
+    initialMonsters: null,
   }
+  combatState.initialMonsters = combatState.monsters.slice()
 
-  const winConditionMet = ({ player, monsters }) => (
+  const playerOrAllMonstersDied = ({ player, monsters }) => (
     player.health <= 0
     ||
     monsters.every((monster:monster) => monster.health <= 0)
@@ -87,21 +95,42 @@ export const run = ({ player, floor }) => {
 
   // while no one has 0 health we will have another turn, eventually someone has to die (enforced by game-design)
   let turn = 1
-  while (!winConditionMet(combatState)) {
+  while (!playerOrAllMonstersDied(combatState)) {
     combatState = executeTurn(combatState, turn)
     turn += 1
   }
-
   // cast player artifacts that has combatWon trigger type
   combatState.player.health > 0
-    && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, combatState.monsters))
+  && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(combatState.player, combatState.monsters))
 
-  const makeLog = combatState => `Floor ${floor}, Combat ⚔️\n\nEnemies:\n${
-    combatState.monsters.map(monster => monster.icon + ' (' + monster.healthIcon + monster.maxHealth + ')').join('\n')
+  // return attack and block power to their initial values
+  combatState.player.attackPower = combatState.player.initialAttackPower
+  combatState.player.blockPower = combatState.player.initialBlockPower
+
+  const makeLog = combatState => `Floor ${floor}, Combat ⚔️\n\nYou${
+    ' ('
+    + player.healthIcon
+    + player.health
+    + ') '
+    + player.artifacts.join('')
+    + player.deck.sort().join('')
+  }\n\nEnemies:\n${
+    combatState.initialMonsters.map(monster => 
+      monster.icon
+      + ' ('
+      + monster.healthIcon
+      + monster?.getMaxHealth(floor)
+      + ') '
+      + monster.artifacts.map(emoji => emoji.icon).join('')
+      + monster.deck.map(emoji => emoji.icon).sort().join('')
+    ).join('\n')
   }${
     combatState.turns.join('\n\n')
   }\n\n${
-    true ? 'You won!' : 'You lost!'
+    combatState.player.health > 0 ? 'You won!' : 'You lost!'
+  }\n\n${
+    combatState.player.artifacts.filter(artifact => artifact.trigger === artifactTriggers.COMBAT_WON)
+      .map(artifact =>  artifact.icon + ' ' + artifact.description).join('\n')
   }`
 
   return combatState.player.health > 0
@@ -145,33 +174,62 @@ function executeTurn (combatState, turn) {
   shuffleArray(player.deck)
   monsters.forEach(monster => shuffleArray(monster.deck))
 
+  monsters.forEach(monster => {
+      monster.castedThisTurn = false
+  })
+
   // casts emojis and artiffact effects for everyone this turn, in order
 
   castThisTurnSkills(player, monsters)
   monsters.forEach(monster => {
-    castThisTurnSkills(monster, [player])
+    if (!castThisTurnSkills(monster, [player])) {
+      monster.castedThisTurn = true
+    }
   })
 
   castThisTurnArtifacts(player, monsters)
   monsters.forEach(monster => {
-    castThisTurnArtifacts(monster, [player])
+    if (!castThisTurnArtifacts(monster, [player])) {
+      monster.castedThisTurn = true
+    }
   })
 
   castThisTurnAttacks(player, monsters)
   monsters.forEach(monster => {
-    castThisTurnAttacks(monster, [player])
+    if (!castThisTurnAttacks(monster, [player])) {
+      monster.castedThisTurn = true
+    }
   })
 
   // remove block from everyone this turn
-  const cleanBlock = (caster) => {
+  const cleanBlockAndStatus = (caster) => {
     if (caster.fortified === 0) {
       caster.block = 0
     }
+    if (caster.weak > 0) {
+      caster.weak -= 1
+    }
+    if (caster.vulnerable > 0) {
+      caster.vulnerable -= 1
+    }
+    if (caster.silenced > 0) {
+      caster.silenced -= 1
+    }
+    if (caster.disarmed > 0) {
+      caster.disarmed -= 1
+    }
+    if (caster.stunned > 0) {
+      caster.stunned -= 1
+    }
+    if (caster.fortified > 0) {
+      caster.fortified -= 1
+    }
   }
-  cleanBlock(player)
-  monsters.forEach(cleanBlock)
+  cleanBlockAndStatus(player)
+  monsters.forEach(cleanBlockAndStatus)
 
-  const displayEmoji = emoji => '\n  ' + emoji.icon + ' ' + emoji.description
+  const displayArtifact = emoji => '\n  ' + emoji.icon + ' ' + emoji.description
+  const displayEmoji = (emoji, caster) => '\n  ' + emoji.icon + ' ' + emoji.description(caster)
 
   // TODO: make logs pretty using emojis descriptions
   combatState.turns[turn] = `Turn ${turn}:\n\n${
@@ -183,27 +241,27 @@ function executeTurn (combatState, turn) {
     + ((player.health > 0 && player.artifacts.length > 0)
       ? player.artifacts
         .filter(artifact => artifact.trigger === artifactTriggers.EVERY_TURN)
-        .map(displayEmoji)
+        .map(displayArtifact)
         .join('')
       : '')
     + player.deck.slice(0, player.emojisPerTurn)
-      .map(displayEmoji)
+      .map(emoji => displayEmoji(emoji, player))
       .join('')
   }\n\n${
     monsters.map(monster =>
       monster.icon
       + ' ('
       + (monster.health > 0 ? monster.healthIcon : '💀')
-      + monster.health
+      + (monster.health > 0 ? monster.health : '')
       + ')'
       + (monster.health > 0 ? ': ' : '')
-      + ((monster.health > 0 && monster.artifacts.length > 0)
+      + ((monster.castedThisTurn && monster.artifacts.length > 0)
         ? monster.artifacts
-          .map(displayEmoji)
+          .map(displayArtifact)
           .join('')
         : '')
-      + (monster.health > 0 ? monster.deck.slice(0, monster.emojisPerTurn)
-        .map(displayEmoji) : '')
+      + (monster.castedThisTurn ? monster.deck.slice(0, monster.emojisPerTurn)
+        .map(emoji => displayEmoji(emoji, monster)) : '')
     ).join('\n')
   }`.trim()
 
@@ -213,16 +271,14 @@ function executeTurn (combatState, turn) {
 const mockPlayer = CLASSES.find(clas => clas.name === 'Warrior')
 
 // everything below is test and should be removed later
-console.log('deck:', mockPlayer?.deck)
 const testCombat1 = run({ player: mockPlayer, floor: 1 })
 console.log(testCombat1.log)
 console.log(testCombat1.rewards)
-console.log('remaining health:', testCombat1.player.health)
+console.log('player health:', testCombat1.player.health)
 
 testCombat1.player.deck.push(testCombat1?.rewards?.pickOneEmoji?.[Math.floor(Math.random() * testCombat1.rewards.pickOneEmoji.length)]) // simulates a reward picked
 
-console.log('deck:', testCombat1.player.deck)
 const testCombat2 = run({ player: testCombat1.player, floor: 2 })
 console.log(testCombat2.log)
 console.log(testCombat2.rewards)
-console.log('remaining health:', testCombat2.player.health)
+console.log('player health:', testCombat2.player.health)
