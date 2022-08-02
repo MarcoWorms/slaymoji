@@ -4,28 +4,28 @@ export const healthIcon =  '🖤'
 export const floorMonsterPacks = [
   {
     floor: 1,
-    monstersPacks: [ // in this example, floor 1 combat can be one of the 3 below:
-      ['🐀', '🐀'],
-      ['🐍', '🐍'],
-      ['🐀', '🐍'],
+    monsters: [
+      { allow: ['🐀','🐍'], count: 2, },
     ]
   },
   {
     floor: 2,
-    monstersPacks: [
-      ['🐀', '🐀', '🐀'],
-      ['🐍', '🐍', '🐍'],
-      ['🐀', '🐀', '🐍'],
-      ['🐀', '🐍', '🐍'],
+    monsters: [
+      { allow: ['🐀','🐍'], count: 3, },
     ]
   },
   {
     floor: 3,
-    monstersPacks: [
-      ['🐗', '🐀', '🐀'],
-      ['🐗', '🐍', '🐍'],
-      ['🐗', '🐀', '🐍'],
-      ['🐗', '🐍', '🐍'],
+    monsters: [
+      { allow: ['🐜'], count: 1, },
+      { allow: ['🐀','🐍'], count: 2, },
+    ]
+  },
+  {
+    floor: 4,
+    monsters: [
+      { allow: ['🐜','🐷'], count: 2, },
+      { allow: ['🐀','🐍'], count: 1, },
     ]
   },
 ]
@@ -51,26 +51,27 @@ export const MONSTERS = [
   },
   {
     icon: '🐍',
-    maxHealth: (floor:number) => 9 + floor,
-    deck: ['👊','👊','✋','✋'],
-    artifacts: ['🦾'],
-  },
-  {
-    icon: '🐗',
-    maxHealth: (floor:number) => 15 + floor,
-    deck: ['👊','👊','✋','✋','💪'],
-    artifacts: ['🦾'],
+    maxHealth: (floor:number) => 6 + floor,
+    deck: ['👊','👊','✋','✋','🦵'],
+    artifacts: ['🦿'],
   },
   {
     icon: '🐜',
     maxHealth: (floor:number) => 9 + floor,
-    deck: ['👊','👊','👊','✋'],
+    deck: ['👊','👊','👊','✋','🦵','💪'],
+    artifacts: ['🦾'],
   },
   {
     icon: '🐷',
-    maxHealth: (floor:number) => 9 + floor,
-    deck: ['👊','👊','✋','✋'],
-    artifacts: ['🦾'],
+    maxHealth: (floor:number) => 20 + floor,
+    deck: ['👊','👊','✋','✋','💪'],
+  },
+  {
+    icon: '🐗',
+    maxHealth: (floor:number) => 30 + floor,
+    deck: ['👊','👊','✋','✋','💪'],
+    artifacts: ['🦾', '🦿'],
+    miniboss: true,
   },
 ]
 
@@ -89,6 +90,6 @@ export const MONSTERS = [
 🤩 🥳 😏 😒 😞 😔 😟 😕 🙁 ☹️ 😣 😖 😫 😩 🥺 😢
 😭 😤 😠 😡 🤬 🤯 😳 🥵 🥶 😱 😨 😰 😥 😓 🤗 🤔
 🤭 🤫 🤥 😶 😐 😑 😬 🙄 😯 😦 😧 😮 😲 🥱 😴 🤤
-😪 😵 🤐 🥴 🤢 🤮 🤧 😷 🤒 🤕 🤑 🤠 😽 🙀 😿 😾
-🤡 💩 👻 💀 ☠️ 👽 👾 🤖 🎃 😺 😸 😹 😻 😼
+😪 😵 🤐 🥴 🤢 🤮 🤧 😷 🤒 🤕 🤑  😽 🙀 😿 😾
+🤡 💩 👻 💀 ☠️ 👽 👾 🤖 🎃 😺 😸 😹 😻 😼 🤠
 */

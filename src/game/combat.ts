@@ -26,11 +26,11 @@ const defaultCombatStatus = {
   // each stack means it last one turn
   weak: 0, // deal 25% less damage
   vulnerable: 0, // take 25% more damage
-  dazed: 0, // add useless emoji to enemy deck
   silenced: 0, // skills wont work next turn
   disarmed: 0, // attacks wont work next turn
   stunned: 0, // cant play next turn
   fortified: 0, // block persists next turn
+  dazed: 0, // add useless emoji to deck
   // special status
   block: 0, // fully removed on the end of the turn
   attackPower: 0, // lasts the entire floor
@@ -44,10 +44,12 @@ export const run = ({ player, floor }) => {
 
   // get random monster pack for this floor
   const thisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)
-  const monstersThisFloor = thisFloor?.monstersPacks?.[
-    // @ts-ignore
-    Math.floor(Math.random() * thisFloor?.monstersPacks?.length)
-  ]
+  const monstersThisFloor = thisFloor?.monsters?.flatMap(monsterData => {
+    return Array.from({ length: monsterData.count }).map(() => {
+      shuffleArray(monsterData.allow)
+      return monsterData.allow[0]
+    })
+  })
 
   // set initial combat state
   let combatState = {
@@ -93,7 +95,9 @@ export const run = ({ player, floor }) => {
   combatState.player.health > 0
     && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, combatState.monsters))
 
-  const makeLog = combatState => `Floor ${floor}, Enemies: ${
+  const makeLog = combatState => `
+Floor ${floor}, Combat ⚔️
+Enemies: ${
     combatState.monsters.map(monster => monster.icon).join(' ')
   }${
     combatState.turns.join('\n\n')
@@ -109,7 +113,7 @@ export const run = ({ player, floor }) => {
       rewards: {
         gold: 5 + floor,
         pickOneEmoji: Array.from({ length: 3 }).map(() => {
-          const clas = CLASSES?.find(clas => clas.name === combatState.player.className)
+          const clas = CLASSES?.find(clas => clas.name === combatState.player.name)
           return clas?.validEmojis[Math.floor(Math.random() * clas?.validEmojis.length)]
         }),
       }
@@ -121,11 +125,11 @@ export const run = ({ player, floor }) => {
     }
 }
 
-const castThisTurnAttacks = (caster, targets) => caster.health > 0 && caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+const castThisTurnAttacks = (caster, targets) => caster.health > 0 && caster.stunned === 0 && caster.disarmed === 0 && caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
   emoji.type === emojiTypes.ATTACK && emoji.cast(caster, targets)
 )
 
-const castThisTurnSkills = (caster, targets) => caster.health > 0 && caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+const castThisTurnSkills = (caster, targets) => caster.health > 0 && caster.stunned === 0 && caster.silenced === 0 && caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
   emoji.type === emojiTypes.SKILL && emoji.cast(caster, targets)
 )
 
@@ -159,16 +163,20 @@ function executeTurn (combatState, turn) {
     castThisTurnAttacks(monster, [player])
   })
 
-  // cleans block for next turn
-  player.block = 0
-  monsters.forEach(monster => {
-    monster.block = 0
-  })
+  // remove block from everyone this turn
+  const cleanBlock = (caster) => {
+    if (caster.fortified === 0) {
+      caster.block = 0
+    }
+  }
+  cleanBlock(player)
+  monsters.forEach(cleanBlock)
 
   // TODO: make logs pretty using emojis descriptions
   combatState.turns[turn] = `Turn ${turn}:\n\n${
     player.icon
     + ' ('
+    + player.healthIcon
     + player.health
     + '): '
     + player.deck.slice(0, player.emojisPerTurn).map(emoji => emoji.icon)
@@ -176,10 +184,11 @@ function executeTurn (combatState, turn) {
     monsters.map(monster =>
       monster.icon
       + ' ('
-      + (monster.health > 0 ? monster.health : 'dead')
+      + (monster.health > 0 ? monster.healthIcon : '💀')
+      + (monster.health > 0 ? monster.health : '')
       + ')'
       + (monster.health > 0 ? ': ' : '')
-      + ((monster.health > 0 && monster.artifacts.length > 0) ? monster.artifacts.map(artifact => artifact.icon).join(' ') + ' ' : '')
+      + ((monster.health > 0 && monster.artifacts.length > 0) ? monster.artifacts.map(artifact => artifact.icon).join(' ') : '')
       + (monster.health > 0 ? monster.deck.slice(0, monster.emojisPerTurn).map(emoji => emoji.icon) : '')
     ).join('\n')
   }`.trim()
@@ -187,18 +196,10 @@ function executeTurn (combatState, turn) {
   return combatState
 }
 
-const mockPlayer = {
-  className: 'Warrior',
-  icon: '🔴',
-  healthIcon: '❤️',
-  health: 50,
-  deck: ['👊','👊','👊','✋','💪'],
-  emojisPerTurn: 3,
-  artifacts: ['💖'],
-}
+const mockPlayer = CLASSES.find(clas => clas.name === 'Warrior')
 
 // everything below is test and should be removed later
-console.log('deck:', mockPlayer.deck)
+console.log('deck:', mockPlayer?.deck)
 const testCombat1 = run({ player: mockPlayer, floor: 1 })
 console.log(testCombat1.log)
 console.log(testCombat1.rewards)
