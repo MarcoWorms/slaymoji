@@ -172,6 +172,8 @@ function executeTurn (combatState, turn) {
   cleanBlock(player)
   monsters.forEach(cleanBlock)
 
+  const displayEmoji = emoji => '\n  ' + emoji.icon + ' ' + emoji.description
+
   // TODO: make logs pretty using emojis descriptions
   combatState.turns[turn] = `Turn ${turn}:\n\n${
     player.icon
@@ -179,7 +181,15 @@ function executeTurn (combatState, turn) {
     + player.healthIcon
     + player.health
     + '): '
-    + player.deck.slice(0, player.emojisPerTurn).map(emoji => emoji.icon)
+    + ((player.health > 0 && player.artifacts.length > 0)
+      ? player.artifacts
+        .filter(artifact => artifact.trigger === artifactTriggers.EVERY_TURN)
+        .map(displayEmoji)
+        .join('')
+      : '')
+    + player.deck.slice(0, player.emojisPerTurn)
+      .map(displayEmoji)
+      .join('')
   }\n\n${
     monsters.map(monster =>
       monster.icon
@@ -188,8 +198,13 @@ function executeTurn (combatState, turn) {
       + (monster.health > 0 ? monster.health : '')
       + ')'
       + (monster.health > 0 ? ': ' : '')
-      + ((monster.health > 0 && monster.artifacts.length > 0) ? monster.artifacts.map(artifact => artifact.icon).join(' ') : '')
-      + (monster.health > 0 ? monster.deck.slice(0, monster.emojisPerTurn).map(emoji => emoji.icon) : '')
+      + ((monster.health > 0 && monster.artifacts.length > 0)
+        ? monster.artifacts
+          .map(displayEmoji)
+          .join('')
+        : '')
+      + (monster.health > 0 ? monster.deck.slice(0, monster.emojisPerTurn)
+        .map(displayEmoji) : '')
     ).join('\n')
   }`.trim()
 

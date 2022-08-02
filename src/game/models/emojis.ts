@@ -63,7 +63,7 @@ export default [
   {
     icon: '💪',
     type: e.SKILL,
-    description: 'Increase your attack power by 1 until the end of this floor',
+    description: 'Increase your attack power by 1',
     cast: (caster, _targets) => {
       caster.attackPower += 1
     },
@@ -71,7 +71,7 @@ export default [
   {
     icon: '🦵',
     type: e.SKILL,
-    description: 'Increase your block power by 1 until the end of this floor',
+    description: 'Increase your block power by 1',
     cast: (caster, _targets) => {
       caster.blockPower += 1
     },
