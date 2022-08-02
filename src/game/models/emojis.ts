@@ -85,13 +85,19 @@ export default [
     },
   },
   {
-    icon: '🌟',
+    icon: '💬',
     type: e.SKILL,
-    description: _caster => `Remove all negative status effects`,
-    cast: (caster, _targets) => {
-      caster.stunned = 0
-      caster.silenced = 0
-      caster.disarmed = 0
+    description: _caster => `All enemies can't play skills next turn`,
+    cast: (_caster, targets) => {
+      targets.forEach(target => target.silenced += 1)
+    },
+  },
+  {
+    icon: '👋',
+    type: e.SKILL,
+    description: _caster => `All enemies can't play attacks next turn`,
+    cast: (_caster, targets) => {
+      targets.forEach(target => target.disarmed += 1)
     },
   },
   {
@@ -115,11 +121,11 @@ export default [
 /* emojis for new cards
 
 
-👋 🤚 🖐 ✋ 🖖 👌 🤏 ✌️ 🤞 🤟 🤘 🤙 👈 👉 
+ 🤚 🖐 ✋ 🖖 👌 🤏 ✌️ 🤞 🤟 🤘 🤙 👈 👉 
 👆 🖕 👇 ☝️ 👍 👎 ✊ 👊 🤛 🤜 👏 🙌 👐 🤲 
 🤝 🙏 ✍️ 💅 🤳 💪 
 🦵 🦶 👂  🧠     
 
-💦💨🌪🔥💥☄️⚡️✨🌋🌌🔊🩸💋
+💦💨🌪🔥💥☄️⚡️✨🌋🌌🔊🩸💋🌟
 👣👀👅👄🧲🔫💣 🧨🪓🔪🧿💉
 */
