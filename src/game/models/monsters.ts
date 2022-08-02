@@ -48,35 +48,36 @@ export const MONSTERS = [
     icon: '🐀',
     maxHealth: (floor:number) => 9 + floor,
     deck: ['👊','👊','👊','✋'],
-    emojisPerTurn: 1, // number of emojis that are casted by this monster each turn
-    artifacts: [],
-    attackPower: 0,
-    blockPower: 0,
   },
   {
     icon: '🐍',
     maxHealth: (floor:number) => 9 + floor,
     deck: ['👊','👊','✋','✋'],
-    emojisPerTurn: 1,
     artifacts: ['🦾'],
-    attackPower: 0,
-    blockPower: 0,
   },
   {
     icon: '🐗',
     maxHealth: (floor:number) => 15 + floor,
     deck: ['👊','👊','✋','✋','💪'],
-    emojisPerTurn: 1,
     artifacts: ['🦾'],
-    attackPower: 0,
-    blockPower: 0,
+  },
+  {
+    icon: '🐜',
+    maxHealth: (floor:number) => 9 + floor,
+    deck: ['👊','👊','👊','✋'],
+  },
+  {
+    icon: '🐷',
+    maxHealth: (floor:number) => 9 + floor,
+    deck: ['👊','👊','✋','✋'],
+    artifacts: ['🦾'],
   },
 ]
 
 /* emoji to use for new monsters
-🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐻‍❄️ 🐨 🐯 🦁 🐮 🐷 🐽 🐸 🐵 🙈 🙉 🙊 
+🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐻‍❄️ 🐨 🐯 🦁 🐮 🐽 🐸 🐵 🙈 🙉 🙊 
 🐒 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 
-🐜 🦟 🦗 🕷 🕸 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 
+ 🦟 🦗 🕷 🕸 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 
 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓 🦍 🦧 🐘 🦛 🦏 🐪 🐫 🦒 🦘 🐃 🐂 
 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐕‍🦺 🐈 🐈‍ 🐓 🦃 🦚 🦜 🦢 
 🐇 🦝 🦨 🦡  🐁 🐀  🦔  🐉 🐲 🌞 🌝 🌛 🌜 🌚 🌕

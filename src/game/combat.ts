@@ -21,6 +21,25 @@ const wrapIcons = (player) => {
   return player
 }
 
+// can be overriden on monster and class models
+const defaultCombatStatus = { 
+  // each stack means it last one turn
+  weak: 0, // deal 25% less damage
+  vulnerable: 0, // take 25% more damage
+  dazed: 0, // add useless emoji to enemy deck
+  silenced: 0, // skills wont work next turn
+  disarmed: 0, // attacks wont work next turn
+  stunned: 0, // cant play next turn
+  fortified: 0, // block persists next turn
+  // special status
+  block: 0, // fully removed on the end of the turn
+  attackPower: 0, // lasts the entire floor
+  blockPower: 0, // lasts the entire floor
+  emojisPerTurn: 1, // emojis cast per turn
+  artifacts: [], // artifacts owned
+  healthIcon: '🖤', // icon for health
+}
+
 export const run = ({ player, floor }) => {
 
   // get random monster pack for this floor
@@ -35,16 +54,17 @@ export const run = ({ player, floor }) => {
     floor,
     turns: [],
     player: {
+      ...defaultCombatStatus,
       ...player,
       // unwrap player deck and artifacts (unwrap = expand string to object)
       deck: unwrapIcons(player.deck, EMOJIS),
       artifacts: unwrapIcons(player.artifacts, ARTIFACTS),
-      block: 0,
     },
     // unwrap monster pack
     monsters: unwrapIcons(monstersThisFloor, MONSTERS)
       // resolve monster health for this floor
       .map((monster) => ({
+        ...defaultCombatStatus,
         ...monster,
         health: monster?.maxHealth(floor),
       }))
@@ -53,8 +73,7 @@ export const run = ({ player, floor }) => {
         ...monster,
         deck: unwrapIcons(monster.deck, EMOJIS),
         artifacts: unwrapIcons(monster.artifacts, ARTIFACTS),
-        block: 0,
-      })),
+      }))
   }
 
   const winConditionMet = ({ player, monsters }) => (
@@ -69,8 +88,6 @@ export const run = ({ player, floor }) => {
     combatState = executeTurn(combatState, turn)
     turn += 1
   }
-  combatState.player.attackPower = 0
-  combatState.player.blockPower = 0
 
   // cast player artifacts that has combatWon trigger type
   combatState.player.health > 0
@@ -178,8 +195,6 @@ const mockPlayer = {
   deck: ['👊','👊','👊','✋','💪'],
   emojisPerTurn: 3,
   artifacts: ['💖'],
-  attackPower: 0,
-  blockPower: 0,
 }
 
 // everything below is test and should be removed later
