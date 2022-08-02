@@ -76,6 +76,33 @@ export default [
       caster.blockPower += 1
     },
   },
+  {
+    icon: '💫',
+    type: e.SKILL,
+    description: _caster => `A random enemy can't play this turn`,
+    cast: (_caster, targets) => {
+      pickRandomAlive(targets).stunned += 1
+    },
+  },
+  {
+    icon: '🌟',
+    type: e.SKILL,
+    description: _caster => `Remove all negative status effects`,
+    cast: (caster, _targets) => {
+      caster.stunned = 0
+      caster.silenced = 0
+      caster.disarmed = 0
+    },
+  },
+  {
+    icon: '🧊',
+    type: e.SKILL,
+    description: caster => `Block ${3 + caster.blockPower} damage, block persists until next turn`,
+    cast: (caster, _targets) => {
+      caster.block += 3 + caster.blockPower
+      caster.fortified = 1
+    },
+  },
 ]
 
 // TODO: card types to implement later, initially fixed but maybe this could be dinamically added on emojis through shops and random events
@@ -93,6 +120,6 @@ export default [
 🤝 🙏 ✍️ 💅 🤳 💪 
 🦵 🦶 👂  🧠     
 
-💦💨🌪🔥💥☄️⚡️✨🌟💫🌋🌌🔊🩸💋
+💦💨🌪🔥💥☄️⚡️✨🌋🌌🔊🩸💋
 👣👀👅👄🧲🔫💣 🧨🪓🔪🧿💉
 */

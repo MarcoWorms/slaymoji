@@ -24,8 +24,6 @@ const wrapIcons = (player) => ({
 // can be overriden on monster and class models
 const defaultCombatStatus = { 
   // each stack means it last one turn
-  weak: 0, // deal 25% less damage
-  vulnerable: 0, // take 25% more damage
   silenced: 0, // skills wont work next turn
   disarmed: 0, // attacks wont work next turn
   stunned: 0, // cant play next turn
