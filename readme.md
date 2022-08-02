@@ -26,6 +26,8 @@ Every emoji deck starts with 5 emojis. When you face an enemies in combat the co
 - 🎲 In the end of every combat: the player can choose 1 of 3 emojis shown to add to the deck, or there is an option to skip and maintain the deck unaltered.  
 - 💖 Artifacts apply a constant effect throughout the entire gameplay. For example, the initial Warrior artifact heals the player for a fixed amount every time a combat is won.  
 
+![image](https://user-images.githubusercontent.com/7863230/182482696-84498a58-7e69-49fb-bcf6-03a373ba3671.png)
+
 ## 🏛️ Floor Types
 
 When the player moves to the next floor, sometimes more than one option emerges for what should happen next: each option will correspond to one of the below floor types:
