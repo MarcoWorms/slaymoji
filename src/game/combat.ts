@@ -68,7 +68,8 @@ export const run = ({ player, floor }) => {
       .map((monster) => ({
         ...defaultCombatStatus,
         ...monster,
-        health: monster?.maxHealth(floor),
+        health: monster?.getMaxHealth(floor),
+        maxHealth: monster?.getMaxHealth(floor),
       }))
       // unwrap monster deck and artifacts
       .map((monster) => ({
@@ -95,10 +96,8 @@ export const run = ({ player, floor }) => {
   combatState.player.health > 0
     && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(player, combatState.monsters))
 
-  const makeLog = combatState => `
-Floor ${floor}, Combat ⚔️
-Enemies: ${
-    combatState.monsters.map(monster => monster.icon).join(' ')
+  const makeLog = combatState => `Floor ${floor}, Combat ⚔️\n\nEnemies:\n${
+    combatState.monsters.map(monster => monster.icon + ' (' + monster.healthIcon + monster.maxHealth + ')').join('\n')
   }${
     combatState.turns.join('\n\n')
   }\n\n${
@@ -195,7 +194,7 @@ function executeTurn (combatState, turn) {
       monster.icon
       + ' ('
       + (monster.health > 0 ? monster.healthIcon : '💀')
-      + (monster.health > 0 ? monster.health : '')
+      + monster.health
       + ')'
       + (monster.health > 0 ? ': ' : '')
       + ((monster.health > 0 && monster.artifacts.length > 0)

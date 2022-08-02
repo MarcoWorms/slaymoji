@@ -22,7 +22,7 @@ const e = emojiTypes
 export default [
   {
     icon: '👊',
-    description: 'Deal 3 damage to the front enemy',
+    description: 'Deal 3 damage to front enemy',
     type: e.ATTACK,
     cast: (caster, targets) => {
       dealDamage(caster, pickFirstAlive(targets), 3)
@@ -63,7 +63,7 @@ export default [
   {
     icon: '💪',
     type: e.SKILL,
-    description: 'Increase your attack power by 1',
+    description: 'Increase attack power by 1',
     cast: (caster, _targets) => {
       caster.attackPower += 1
     },
@@ -71,7 +71,7 @@ export default [
   {
     icon: '🦵',
     type: e.SKILL,
-    description: 'Increase your block power by 1',
+    description: 'Increase block power by 1',
     cast: (caster, _targets) => {
       caster.blockPower += 1
     },

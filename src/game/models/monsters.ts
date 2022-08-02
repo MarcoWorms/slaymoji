@@ -46,29 +46,29 @@ export type monster = {
 export const MONSTERS = [
   {
     icon: '🐀',
-    maxHealth: (floor:number) => 9 + floor,
+    getMaxHealth: (floor:number) => 9 + floor,
     deck: ['👊','👊','👊','✋'],
   },
   {
     icon: '🐍',
-    maxHealth: (floor:number) => 6 + floor,
+    getMaxHealth: (floor:number) => 6 + floor,
     deck: ['👊','👊','✋','✋','🦵'],
     artifacts: ['🦿'],
   },
   {
     icon: '🐜',
-    maxHealth: (floor:number) => 9 + floor,
+    getMaxHealth: (floor:number) => 9 + floor,
     deck: ['👊','👊','👊','✋','🦵','💪'],
     artifacts: ['🦾'],
   },
   {
     icon: '🐷',
-    maxHealth: (floor:number) => 20 + floor,
+    getMaxHealth: (floor:number) => 20 + floor,
     deck: ['👊','👊','✋','✋','💪'],
   },
   {
     icon: '🐗',
-    maxHealth: (floor:number) => 30 + floor,
+    getMaxHealth: (floor:number) => 30 + floor,
     deck: ['👊','👊','✋','✋','💪'],
     artifacts: ['🦾', '🦿'],
     miniboss: true,
