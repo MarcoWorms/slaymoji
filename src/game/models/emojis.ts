@@ -73,6 +73,15 @@ const EMOJIS = [
     },
   },
   {
+    icon: '🧊',
+    type: e.SKILL,
+    description: caster => `Block ${3 + caster.blockPower} damage and apply 1 FORTIFY`,
+    cast: (caster, _targets) => {
+      caster.block += 3 + caster.blockPower
+      caster.fortified = 1
+    },
+  },
+  {
     rare: true,
     icon: '🛡️',
     description: caster => `Block ${8 + caster.blockPower} damage and apply 1 FORTIFY`,
@@ -139,15 +148,6 @@ const EMOJIS = [
     description: _caster => `Apply 1 DISARMED to all enemies`,
     cast: (_caster, targets) => {
       targets.forEach(target => target.disarmed += 1)
-    },
-  },
-  {
-    icon: '🧊',
-    type: e.SKILL,
-    description: caster => `Block ${3 + caster.blockPower} damage, block persists until next turn`,
-    cast: (caster, _targets) => {
-      caster.block += 3 + caster.blockPower
-      caster.fortified = 1
     },
   },
   {

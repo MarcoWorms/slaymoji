@@ -69,7 +69,7 @@ export default [
   {
     icon: '🐗',
     getMaxHealth: (floor:number) => 30 + floor,
-    deck: ['👊','👊','✋','✋','💪'],
+    deck: ['👊','👊','✋','✋','💪', '🛡️'],
     artifacts: ['🦾', '🦿'],
     miniboss: true,
   },

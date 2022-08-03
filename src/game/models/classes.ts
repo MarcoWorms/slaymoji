@@ -1,3 +1,5 @@
+import EMOJIS from "./emojis.js"
+
 export type gameClass = {
   name: string,
   icon: string,
@@ -19,7 +21,7 @@ const classes: gameClass[] = [
     health: 50,
     maxHealth: 50,
     deck: ['👊','👊','👊','✋','💪'],
-    validEmojis: ['👊','👏','✋','💪','🦵'],
+    validEmojis: EMOJIS.filter(emoji => !emoji.rare).map(emoji => emoji.icon),
     artifacts: ['💖'],
     validArtifacts: ['💖', '🦾'],
     emojisPerTurn: 3,

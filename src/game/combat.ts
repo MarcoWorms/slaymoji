@@ -200,7 +200,7 @@ function executeTurn (combatState, turn) {
 
   // casts emojis and artiffact effects for everyone this turn, in order
 
-  if (!castThisTurnAttacks(player, monsters)) {
+  if (!castThisTurnSkills(player, monsters)) {
     player.castedThisTurn = player.castedThisTurn.concat(
       player.deck.slice(0, player.emojisPerTurn)
         .filter(emoji => emoji.type === emojiTypes.SKILL)
@@ -314,7 +314,15 @@ while(loop) {
   testCombat = run({ player: testCombat.player ? testCombat.player : mockPlayer , floor })
   console.log(testCombat.log)
   let input = parseInt(prompt(
-    `Current Health:${testCombat.player.health}/${testCombat.player.maxHealth}\nCurrent Deck:${testCombat.player.deck.sort().join('')}\nPick one:\n` + testCombat.rewards?.pickOneEmoji.map((emoji, index) => `${index+1}: ${emoji}`).join('\n') + '\n' + '4: skip' + '\n',
+    `Current Health:${
+      testCombat.player.health}/${testCombat.player.maxHealth
+      }\nCurrent Deck:${
+        testCombat.player.deck.sort().join('')
+      }\nPick one:\n`
+      + unwrapIcons(testCombat.rewards?.pickOneEmoji, EMOJIS).map((emoji, index) => `${index+1}: ${emoji.icon} ${emoji.description(testCombat.player)}`).join('\n')
+      + '\n'
+      + '4: skip'
+      + '\n',
     '-1'
   ))
   if (input === 1 || input === 2 || input === 3) {
