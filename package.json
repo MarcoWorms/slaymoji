@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "dotenv": "16.0.1",
-    "grammy": "1.9.1"
+    "grammy": "1.9.1",
+    "prompt-sync": "^4.2.0"
   },
   "type": "module"
 }

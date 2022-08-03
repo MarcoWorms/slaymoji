@@ -2,6 +2,8 @@ import MONSTERS, { floorMonsterPacks, monster } from './models/monsters.js';
 import EMOJIS, { emojiTypes } from './models/emojis.js'
 import ARTIFACTS, { artifactTriggers } from './models/artifacts.js'
 import CLASSES from './models/classes.js'
+import initPrompt from 'prompt-sync'
+const prompt = initPrompt()
 
 // Randomize array in-place using Durstenfeld shuffle algorithm, an optimized version of Fisher-Yate
 // lazily stolen from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -36,8 +38,6 @@ const defaultCombatStatus = {
   emojisPerTurn: 1, // emojis cast per turn
   artifacts: [], // artifacts owned
   healthIcon: '🖤', // icon for health
-  // dev only
-  castedThisTurn: [], // used to track for proper logging when killed
 }
 
 export const run = ({ player, floor }) => {
@@ -124,7 +124,7 @@ export const run = ({ player, floor }) => {
   combatState.player.poison = combatState.player.initialPoison
   combatState.player.deck = combatState.player.initialDeck
 
-  const makeLog = combatState => `Floor ${floor}, Combat ⚔️\n\nYou${
+  const renderLog = combatState => `Floor ${floor}, Combat ⚔️\n\nYou${
     ' ('
     + player.healthIcon
     + player.health
@@ -154,7 +154,7 @@ export const run = ({ player, floor }) => {
     ? {
       player: wrapIcons(combatState.player),
       playerWon: true,
-      log: makeLog(combatState),
+      log: renderLog(combatState),
       rewards: {
         gold: 5 + floor,
         pickOneEmoji: Array.from({ length: 3 }).map(() => {
@@ -166,7 +166,7 @@ export const run = ({ player, floor }) => {
     : {
       player: wrapIcons(combatState.player),
       playerWon: false,
-      log: makeLog(combatState),
+      log: renderLog(combatState),
     }
 }
 
@@ -191,6 +191,8 @@ function executeTurn (combatState, turn) {
   shuffleArray(player.deck)
   monsters.forEach(monster => shuffleArray(monster.deck))
 
+  player.castedThisTurn = []
+  player.castedArtifactsThisTurn = []
   monsters.forEach(monster => {
       monster.castedThisTurn = []
       monster.castedArtifactsThisTurn = []
@@ -198,7 +200,12 @@ function executeTurn (combatState, turn) {
 
   // casts emojis and artiffact effects for everyone this turn, in order
 
-  castThisTurnSkills(player, monsters)
+  if (!castThisTurnAttacks(player, monsters)) {
+    player.castedThisTurn = player.castedThisTurn.concat(
+      player.deck.slice(0, player.emojisPerTurn)
+        .filter(emoji => emoji.type === emojiTypes.SKILL)
+    )
+  }
   monsters.forEach(monster => {
     if (!castThisTurnSkills(monster, [player])) {
       monster.castedThisTurn = monster.castedThisTurn.concat(
@@ -208,7 +215,10 @@ function executeTurn (combatState, turn) {
     }
   })
 
-  castThisTurnArtifacts(player, monsters)
+  if (!castThisTurnArtifacts(player, [player])) {
+    player.castedArtifactsThisTurn = player.artifacts
+      .filter(artifact => artifact.trigger === artifactTriggers.EVERY_TURN)
+  }
   monsters.forEach(monster => {
     if (!castThisTurnArtifacts(monster, [player])) {
       monster.castedArtifactsThisTurn = monster.artifacts
@@ -216,7 +226,12 @@ function executeTurn (combatState, turn) {
     }
   })
 
-  castThisTurnAttacks(player, monsters)
+  if (!castThisTurnAttacks(player, monsters)) {
+    player.castedThisTurn = player.castedThisTurn.concat(
+      player.deck.slice(0, player.emojisPerTurn)
+        .filter(emoji => emoji.type === emojiTypes.ATTACK)
+    )
+  }
   monsters.forEach(monster => {
     if (!castThisTurnAttacks(monster, [player])) {
       monster.castedThisTurn = monster.castedThisTurn.concat(
@@ -261,54 +276,54 @@ function executeTurn (combatState, turn) {
   cleanBlockAndStatus(player)
   monsters.forEach(cleanBlockAndStatus)
 
-  const displayEmoji = (emoji, caster) => '\n  ' + emoji.icon + ' ' + emoji.description(caster)
+  const renderEmoji = (emoji, caster) => '\n  ' + emoji.icon + ' ' + emoji.description(caster)
+  const renderCaster = caster =>
+    caster.icon
+      + ' ('
+      + ((caster.health > 0) ? caster.healthIcon : '💀')
+      + ((caster.health > 0) ? caster.health : '')
+      + '): '
+      + ((caster.castedArtifactsThisTurn.length > 0)
+        ? caster.castedArtifactsThisTurn.map(artifact => renderEmoji(artifact, caster)).join('')
+        : '')
+      + (caster.castedThisTurn.length > 0
+        ? caster.deck.slice(0, caster.emojisPerTurn).map(emoji => renderEmoji(emoji, caster)).join('')
+        : '')
 
   // TODO: make logs pretty using emojis descriptions
   combatState.turns[turn] = `Turn ${turn}:\n\n${
-    player.icon
-    + ' ('
-    + player.healthIcon
-    + player.health
-    + '): '
-    + ((player.health > 0 && player.artifacts.length > 0)
-      ? player.artifacts
-        .filter(artifact => artifact.trigger === artifactTriggers.EVERY_TURN)
-        .map(artifact => displayEmoji(artifact, player))
-        .join('')
-      : '')
-    + player.deck.slice(0, player.emojisPerTurn)
-      .map(emoji => displayEmoji(emoji, player))
-      .join('')
+    renderCaster(player)
   }\n\n${
     monsters.map(monster =>
-      monster.icon
-      + ' ('
-      + (monster.health > 0 ? monster.healthIcon : '💀')
-      + (monster.health > 0 ? monster.health : '')
-      + ')'
-      + (monster.health > 0 ? ': ' : '')
-      + ((monster.castedArtifactsThisTurn.length > 0)
-        ? monster.castedArtifactsThisTurn.map(artifact => displayEmoji(artifact, monster)).join('')
-        : '')
-      + (monster.castedThisTurn.length > 0 ? monster.deck.slice(0, monster.emojisPerTurn)
-        .map(emoji => displayEmoji(emoji, monster)) : '')
+      renderCaster(monster)
     ).join('\n')
   }`.trim()
 
   return combatState
 }
 
-const mockPlayer = CLASSES.find(clas => clas.name === 'Warrior')
+
 
 // everything below is test and should be removed later
-const testCombat1 = run({ player: mockPlayer, floor: 1 })
-console.log(testCombat1.log)
-console.log(testCombat1.rewards)
-console.log('player health:', testCombat1.player.health)
 
-testCombat1.player.deck.push(testCombat1?.rewards?.pickOneEmoji?.[Math.floor(Math.random() * testCombat1.rewards.pickOneEmoji.length)]) // simulates a reward picked
-
-const testCombat2 = run({ player: testCombat1.player, floor: 2 })
-console.log(testCombat2.log)
-console.log(testCombat2.rewards)
-console.log('player health:', testCombat2.player.health)
+let floor = 1
+let mockPlayer = CLASSES.find(clas => clas.name === 'Warrior')
+let testCombat = {} as any
+let loop = true
+while(loop) {
+  testCombat = run({ player: testCombat.player ? testCombat.player : mockPlayer , floor })
+  console.log(testCombat.log)
+  let input = parseInt(prompt(
+    `Current Health:${testCombat.player.health}/${testCombat.player.maxHealth}\nCurrent Deck:${testCombat.player.deck.sort().join('')}\nPick one:\n` + testCombat.rewards?.pickOneEmoji.map((emoji, index) => `${index+1}: ${emoji}`).join('\n') + '\n' + '4: skip' + '\n',
+    '-1'
+  ))
+  if (input === 1 || input === 2 || input === 3) {
+    const reward = testCombat.rewards?.pickOneEmoji[input - 1]
+    testCombat.player.deck.push(reward)
+  }
+  if (input === 0) {
+    loop = false
+    break
+  }
+  floor += 1
+}
