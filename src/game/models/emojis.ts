@@ -19,7 +19,7 @@ export enum emojiTypes {
 }
 const e = emojiTypes
 
-export default [
+const EMOJIS = [
   {
     icon: '👊',
     description: caster => `Deal ${3 + caster.attackPower} damage to front enemy`,
@@ -37,11 +37,31 @@ export default [
     },
   },
   {
+    rare: true,
+    icon: '☄️',
+    description: caster => `Deal ${7 + caster.attackPower} damage to all enemies`,
+    type: e.ATTACK,
+    cast: (caster, targets) => {
+      targets.forEach(target => dealDamage(caster, target, 7))
+    },
+  },
+  {
     icon: '🤞',
     description: caster => `Deal ${6 + caster.attackPower} damage to a random enemy`,
     type: e.ATTACK,
     cast: (caster, targets) => {
       dealDamage(caster, pickRandomAlive(targets), 6)
+    },
+  },
+  {
+    icon: '🤞',
+    description: caster => `Deal ${1 + caster.attackPower} damage 4 times too random enemies.`,
+    type: e.ATTACK,
+    cast: (caster, targets) => {
+      dealDamage(caster, pickRandomAlive(targets), 1)
+      dealDamage(caster, pickRandomAlive(targets), 1)
+      dealDamage(caster, pickRandomAlive(targets), 1)
+      dealDamage(caster, pickRandomAlive(targets), 1)
     },
   },
   {
@@ -53,11 +73,13 @@ export default [
     },
   },
   {
-    icon: '✊',
-    description: caster => `Block ${7 + caster.blockPower} damage`,
+    rare: true,
+    icon: '🛡️',
+    description: caster => `Block ${8 + caster.blockPower} damage and apply 1 FORTIFY`,
     type: e.SKILL,
     cast: (caster, _targets) => {
-      caster.block += 7 + caster.blockPower
+      caster.block += 8 + caster.blockPower
+      caster.fortify += 1
     },
   },
   {
@@ -77,9 +99,18 @@ export default [
     },
   },
   {
+    icon: '🌋',
+    type: e.SKILL,
+    description: _caster => `Increase attack and block power by 1 this floor`,
+    cast: (caster, _targets) => {
+      caster.attackPower += 1
+      caster.blockPower += 1
+    },
+  },
+  {
     icon: '💫',
     type: e.SKILL,
-    description: _caster => `A random enemy can't play this turn`,
+    description: _caster => `Apply 1 STUNNED to a random enemy`,
     cast: (_caster, targets) => {
       pickRandomAlive(targets).stunned += 1
     },
@@ -87,15 +118,25 @@ export default [
   {
     icon: '💬',
     type: e.SKILL,
-    description: _caster => `All enemies can't play skills next turn`,
+    description: _caster => `Apply 1 SILENCE to all enemies`,
     cast: (_caster, targets) => {
       targets.forEach(target => target.silenced += 1)
     },
   },
   {
+    icon: '👅',
+    type: e.ATTACK,
+    description: caster => `Deal ${2 + caster.attackPower} damage to a random enemy and apply 1 SILENCE`,
+    cast: (caster, targets) => {
+      const target = pickRandomAlive(targets)
+      target.silenced += 1
+      dealDamage(caster, target, 2)
+    },
+  },
+  {
     icon: '👋',
     type: e.SKILL,
-    description: _caster => `All enemies can't play attacks next turn`,
+    description: _caster => `Apply 1 DISARMED to all enemies`,
     cast: (_caster, targets) => {
       targets.forEach(target => target.disarmed += 1)
     },
@@ -109,7 +150,50 @@ export default [
       caster.fortified = 1
     },
   },
+  {
+    icon: '✨',
+    type: e.SKILL,
+    description: _caster => `Add 1 ❌ to all enemies decks this floor`,
+    cast: (_caster, targets) => {
+      targets.forEach(target => target.deck.push(EMOJIS.find(emoji => emoji.icon === '❌')))	
+    },
+  },
+  {
+    icon: '🔊',
+    type: e.SKILL,
+    description: _caster => `Apply 2 DAZED to all enemies`,
+    cast: (_caster, targets) => {
+      targets.forEach(target => target.dazed += 2)
+    },
+  },
+  {
+    icon: '❌',
+    type: e.SKILL,
+    description: _caster => `Does nothing!`,
+    cast: (_caster, _targets) => {
+    },
+  },
+  {
+    icon: '🩸',
+    type: e.ATTACK,
+    description: caster => `Apply ${5 + caster.attackPower} POISON to a random enemy`,
+    cast: (caster, targets) => {
+      pickRandomAlive(targets).poison += 5 + caster.attackPower
+    },
+  },
+  {
+    icon: '💉',
+    type: e.ATTACK,
+    description: caster => `Deal 3 damage to a random enemy and apply ${2 + caster.attackPower} POISON `,
+    cast: (caster, targets) => {
+      const target = pickRandomAlive(targets)
+      dealDamage(caster, target, 3)
+      target.poison += 2 + caster.attackPower
+    },
+  },
 ]
+
+export default EMOJIS
 
 // TODO: card types to implement later, initially fixed but maybe this could be dinamically added on emojis through shops and random events
 // --- card types
@@ -121,11 +205,11 @@ export default [
 /* emojis for new cards
 
 
- 🤚 🖐 ✋ 🖖 👌 🤏 ✌️ 🤞 🤟 🤘 🤙 👈 👉 
+ 🤚 🖐 ✋ 🖖 👌 🤏 ✌️ 🤞 🤟 🤘 🤙 👈 👉 ✊
 👆 🖕 👇 ☝️ 👍 👎 ✊ 👊 🤛 🤜 👏 🙌 👐 🤲 
 🤝 🙏 ✍️ 💅 🤳 💪 
 🦵 🦶 👂  🧠     
 
-💦💨🌪🔥💥☄️⚡️✨🌋🌌🔊🩸💋🌟
-👣👀👅👄🧲🔫💣 🧨🪓🔪🧿💉
+💦💨🌪🔥💥☄️⚡️✨🌋🌌🔊💋🌟
+👣👀👄🧲🔫💣 🧨🪓🔪🧿
 */

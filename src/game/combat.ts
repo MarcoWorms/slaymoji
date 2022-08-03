@@ -28,6 +28,7 @@ const defaultCombatStatus = {
   disarmed: 0, // attacks wont work next turn
   stunned: 0, // cant play next turn
   fortified: 0, // block persists next turn
+  dazed: 0, // adds one useless card to deck per turn
   // special status
   block: 0, // fully removed on the end of the turn
   attackPower: 0, // lasts the entire floor
@@ -36,7 +37,7 @@ const defaultCombatStatus = {
   artifacts: [], // artifacts owned
   healthIcon: '🖤', // icon for health
   // dev only
-  castedThisTurn: false, // used to track for proper logging when killed
+  castedThisTurn: [], // used to track for proper logging when killed
 }
 
 export const run = ({ player, floor }) => {
@@ -53,6 +54,15 @@ export const run = ({ player, floor }) => {
     ...player,
     initialAttackPower: player.attackPower,
     initialBlockPower: player.blockPower,
+    initialBlock: player.block,
+    initialEmojisPerTurn: player.emojisPerTurn,
+    initialSilenced: player.silenced,
+    initialDisarmed: player.disarmed,
+    initialStunned: player.stunned,
+    initialFortified: player.fortified,
+    initialDazed: player.dazed,
+    initialPoison: player.poison,
+    initialDeck: player.deck.slice(),
   })
   // set initial combat state
   let combatState = {
@@ -96,13 +106,23 @@ export const run = ({ player, floor }) => {
     combatState = executeTurn(combatState, turn)
     turn += 1
   }
+
   // cast player artifacts that has combatWon trigger type
   combatState.player.health > 0
   && combatState.player.artifacts.forEach(artifact => artifact.trigger === artifactTriggers.COMBAT_WON && artifact.cast(combatState.player, combatState.monsters))
 
-  // return attack and block power to their initial values
+  // return player stuff to their initial values
   combatState.player.attackPower = combatState.player.initialAttackPower
   combatState.player.blockPower = combatState.player.initialBlockPower
+  combatState.player.block = combatState.player.initialBlock
+  combatState.player.emojisPerTurn = combatState.player.initialEmojisPerTurn
+  combatState.player.silenced = combatState.player.initialSilenced
+  combatState.player.disarmed = combatState.player.initialDisarmed
+  combatState.player.stunned = combatState.player.initialStunned
+  combatState.player.fortified = combatState.player.initialFortified
+  combatState.player.dazed = combatState.player.initialDazed
+  combatState.player.poison = combatState.player.initialPoison
+  combatState.player.deck = combatState.player.initialDeck
 
   const makeLog = combatState => `Floor ${floor}, Combat ⚔️\n\nYou${
     ' ('
@@ -228,6 +248,14 @@ function executeTurn (combatState, turn) {
     }
     if (caster.fortified > 0) {
       caster.fortified -= 1
+    }
+    if (caster.dazed > 0) {
+      caster.deck.push(EMOJIS.find(emoji => emoji.icon === '❌'))
+      caster.dazed -= 1
+    }
+    if (caster.poison > 0) {
+      caster.health -= caster.poison
+      caster.poison -= 1
     }
   }
   cleanBlockAndStatus(player)
