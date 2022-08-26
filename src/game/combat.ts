@@ -2,8 +2,6 @@ import MONSTERS, { floorMonsterPacks, monster } from './models/monsters.js';
 import EMOJIS, { emojiTypes } from './models/emojis.js'
 import ARTIFACTS, { artifactTriggers } from './models/artifacts.js'
 import CLASSES from './models/classes.js'
-import initPrompt from 'prompt-sync'
-const prompt = initPrompt()
 
 // Randomize array in-place using Durstenfeld shuffle algorithm, an optimized version of Fisher-Yate
 // lazily stolen from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -16,7 +14,7 @@ function shuffleArray(array) {
   }
 }
 
-const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => entry.icon === icon))
+export const unwrapIcons = (array, dataset) => array.map(icon => dataset.find(entry => entry.icon === icon))
 const wrapIcons = (player) => ({
   ...player,
   deck: player.deck.map(emoji => emoji.icon),
@@ -298,38 +296,4 @@ function executeTurn (combatState, turn) {
   }`.trim()
 
   return combatState
-}
-
-
-
-// everything below is test and should be removed later
-
-let floor = 1
-let mockPlayer = CLASSES.find(clas => clas.name === 'Warrior')
-let testCombat = {} as any
-let loop = true
-while(loop) {
-  testCombat = run({ player: testCombat.player ? testCombat.player : mockPlayer , floor })
-  console.log(testCombat.log)
-  let input = parseInt(prompt(
-    `Current Health:${
-      testCombat.player.health}/${testCombat.player.maxHealth
-      }\nCurrent Deck:${
-        testCombat.player.deck.sort().join('')
-      }\nPick one:\n`
-      + unwrapIcons(testCombat.rewards?.pickOneEmoji, EMOJIS).map((emoji, index) => `${index+1}: ${emoji.icon} ${emoji.description(testCombat.player)}`).join('\n')
-      + '\n'
-      + '4: skip'
-      + '\n',
-    '-1'
-  ))
-  if (input === 1 || input === 2 || input === 3) {
-    const reward = testCombat.rewards?.pickOneEmoji[input - 1]
-    testCombat.player.deck.push(reward)
-  }
-  if (input === 0) {
-    loop = false
-    break
-  }
-  floor += 1
 }
