@@ -20,6 +20,7 @@
     "test-combat": "npm run build && node dist/game/combat.js"
   },
   "dependencies": {
+    "@types/prompt-sync": "^4.1.1",
     "dotenv": "16.0.1",
     "grammy": "1.9.1",
     "prompt-sync": "^4.2.0"
