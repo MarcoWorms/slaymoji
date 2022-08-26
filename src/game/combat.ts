@@ -41,7 +41,6 @@ const defaultCombatStatus = {
 }
 
 export const run = ({ player, floor }) => {
-
   // get random monster pack for this floor
   const thisFloor = floorMonsterPacks?.find(floorData => floorData?.floor === floor)
   const monstersThisFloor = thisFloor?.monsters?.flatMap(monsterData => {
@@ -183,7 +182,6 @@ const castThisTurnArtifacts = (caster, targets) => (caster.health > 0) ? caster.
 ) : true
 
 function executeTurn (combatState, turn) {
-
   const player = combatState.player
   const monsters = combatState.monsters
 
