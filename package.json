@@ -17,7 +17,7 @@
     "prenode": "npm run copy-screens-to-dist",
     "node": "node dist/index.js",
     "build": "tsc",
-    "test-combat": "npm run build && node dist/game/combat.js"
+    "test-combat": "npm run build && node dist/game/combat.test.js"
   },
   "dependencies": {
     "@types/prompt-sync": "^4.1.1",
