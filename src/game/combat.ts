@@ -25,8 +25,11 @@ const wrapIcons = (player) => ({
 const defaultCombatStatus = { 
   // each stack means it last one turn
   silenced: 0, // skills wont work next turn
+  silencedThisTurn: false, // skills wont work next turn
   disarmed: 0, // attacks wont work next turn
+  disarmedThisTurn: false, // attacks wont work next turn
   stunned: 0, // cant play next turn
+  stunnedThisTurn: false, // cant play next turn
   fortified: 0, // block persists next turn
   dazed: 0, // adds one useless card to deck per turn
   // special status
@@ -167,15 +170,25 @@ export const run = ({ player, floor }) => {
     }
 }
 
-const castThisTurnAttacks = (caster, targets) => (caster.health > 0 && caster.stunned === 0 && caster.disarmed === 0) ? caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+const castThisTurnAttacks = (caster, targets) => (
+  caster.health > 0
+  && !caster.stunnedThisTurn
+  && !caster.disarmedThisTurn
+) ? caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
   emoji.type === emojiTypes.ATTACK && emoji.cast(caster, targets)
 ) : true
 
-const castThisTurnSkills = (caster, targets) => (caster.health > 0 && caster.stunned === 0 && caster.silenced === 0) ? caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
+const castThisTurnSkills = (caster, targets) => (
+  caster.health > 0
+  && !caster.stunnedThisTurn
+  && !caster.silencedThisTurn
+) ? caster.deck.slice(0, caster.emojisPerTurn).forEach(emoji => 
   emoji.type === emojiTypes.SKILL && emoji.cast(caster, targets)
 ) : true
 
-const castThisTurnArtifacts = (caster, targets) => (caster.health > 0) ? caster.artifacts.forEach(artifact => 
+const castThisTurnArtifacts = (caster, targets) => (
+  caster.health > 0
+) ? caster.artifacts.forEach(artifact => 
   artifact.trigger === artifactTriggers.EVERY_TURN && artifact.cast(caster, targets)
 ) : true
 
@@ -242,20 +255,23 @@ function executeTurn (combatState, turn) {
     if (caster.fortified === 0) {
       caster.block = 0
     }
-    if (caster.weak > 0) {
-      caster.weak -= 1
-    }
-    if (caster.vulnerable > 0) {
-      caster.vulnerable -= 1
-    }
     if (caster.silenced > 0) {
       caster.silenced -= 1
+      caster.silencedThisTurn = true
+    } else {
+      caster.silencedThisTurn = false
     }
     if (caster.disarmed > 0) {
       caster.disarmed -= 1
+      caster.disarmedThisTurn = true
+    } else {
+      caster.disarmedThisTurn = false
     }
     if (caster.stunned > 0) {
       caster.stunned -= 1
+      caster.stunnedThisTurn = true
+    } else {
+      caster.stunnedThisTurn = false
     }
     if (caster.fortified > 0) {
       caster.fortified -= 1

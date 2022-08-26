@@ -169,6 +169,7 @@ const EMOJIS = [
   {
     icon: '❌',
     type: e.SKILL,
+    disableAsLoot: true,
     description: _caster => `Does nothing!`,
     cast: (_caster, _targets) => {
     },

@@ -21,7 +21,7 @@ const classes: gameClass[] = [
     health: 50,
     maxHealth: 50,
     deck: ['👊','👊','👊','✋','💪'],
-    validEmojis: EMOJIS.filter(emoji => !emoji.rare).map(emoji => emoji.icon),
+    validEmojis: EMOJIS.filter(emoji => !emoji.disableAsLoot).map(emoji => emoji.icon),
     artifacts: ['💖'],
     validArtifacts: ['💖', '🦾'],
     emojisPerTurn: 3,
