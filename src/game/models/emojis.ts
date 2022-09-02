@@ -1,6 +1,6 @@
 const pickRandomAlive = targets => targets
   .filter(target => target.health > 0)
-  [Math.floor(Math.random() * targets.length)]
+  [Math.floor(Math.random() * targets.length)] || targets[0]
 
 const dealDamage = (caster, target, damage) => {
   const dmgAfterBlock = damage + caster.attackPower - target.block
