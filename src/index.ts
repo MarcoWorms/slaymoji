@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import { Context, Bot } from 'grammy'
 import screens from './screens/load.js'
+import { renderClass } from './template.js'
+
 const bot = new Bot(process.env.BOT_TOKEN || '')
 
 // // Example:
@@ -69,7 +71,7 @@ bot.hears('/pick_class', (ctx) => ctx.reply(screens.pickClass, replyOpts({
   buttons: ["🔴 Warrior"],
 })))
 
-const warriorDescription = (ctx: Context) => ctx.reply(screens.warrior, replyOpts({
+const warriorDescription = (ctx: Context) => ctx.reply(renderClass('Warrior'), replyOpts({
   placeholder: "Start with warrior!",
   buttons: ["/pick_warrior", "/pick_class"],
 }))
